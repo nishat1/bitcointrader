@@ -79,7 +79,7 @@
            document.getElementById('btc').innerHTML = "<b>BITCOIN----------->BUY:</b> " +
            Number(Math.round(response[3]*conv_btc*1.04+'e'+2)+'e-'+2) +
            "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
-           Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
+           Number(Math.round(response[1]*conv_btc*0.96+'e'+2)+'e-'+2)
          }
        }
 
