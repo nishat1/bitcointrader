@@ -30,7 +30,7 @@
         background-color: #1A1A1A;
       }
       .navbar-inverse .navbar-nav li a {
-        color: #D5D5D5;
+        color: #A5A5A5;
       }
 
     </style>
@@ -47,7 +47,7 @@
             <span class="icon-bar"></span>
           </button>
           <!-- remove navbar-brand if not using a picture -->
-          <a class="navbar-brand" href="index.html" style="font-size:1.2em">SurreyBitcoins</a>
+          <a class="navbar-brand" href="index.html" style="font-size:1.2em; color:#F2F2F2">SurreyBitcoins</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
@@ -58,6 +58,31 @@
         </div>
       </div>
     </nav>
+
+    <img src="img/bitcoin.jpg" style="max-width:100vw">
+
+    <!-- <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
+      </ol>
+
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img src="img/bitcoin.jpg">
+        </div>
+        <div class="item">
+          <img src="img/bitcoincash.png">
+        </div>
+        <div class="item">
+          <img src="img/ethereum.jpg">
+        </div>
+      </div>
+
+    </div>  -->
 
     <h1 style="padding-left:10px"> SurreyBitcoins.com </h1>
 
@@ -71,6 +96,8 @@
     <br>
     <br>
     <br>
+
+    <hr>
 
     <div id="disclaimer" style="padding: 0 10px">
       <b> User will pay for the transaction fee for both buy and sell.</b>
@@ -128,7 +155,7 @@
        if(chanid == btc) {
          var hb = response[1]
          if(hb != "hb") {
-           document.getElementById('btc').innerHTML = "<b>BITCOIN----------->BUY:</b> " +
+           document.getElementById('btc').innerHTML = "<b>BITCOIN</b> -----------> BUY: " +
            Number(Math.round(response[3]*conv_btc*1.04+'e'+2)+'e-'+2) +
            "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
            Number(Math.round(response[1]*conv_btc*0.96+'e'+2)+'e-'+2)
@@ -138,7 +165,7 @@
        if(chanid == bch) {
          var hb = response[1]
          if(hb != "hb") {
-           document.getElementById('bch').innerHTML = "<BR><b>BITCOIN CASH-->BUY:</b> " +
+           document.getElementById('bch').innerHTML = "<BR><b>BITCOIN CASH</b> --> BUY: " +
            Number(Math.round(response[3]*1.40*1.05+'e'+2)+'e-'+2) +
            "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
            Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
@@ -148,7 +175,7 @@
        if(chanid == eth) {
          var hb = response[1]
          if(hb != "hb") {
-           document.getElementById('eth').innerHTML = "<BR><b>ETHEREUM------->BUY:</b> " +
+           document.getElementById('eth').innerHTML = "<BR><b>ETHEREUM</b> -------> BUY: " +
            Number(Math.round(response[3]*1.40*1.05+'e'+2)+'e-'+2) +
            "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
            Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
@@ -158,7 +185,7 @@
        if(chanid == ltc) {
          var hb = response[1]
          if(hb != "hb") {
-           document.getElementById('ltc').innerHTML = "<BR><b>LITECOIN---------->BUY:</b> " +
+           document.getElementById('ltc').innerHTML = "<BR><b>LITECOIN</b> ----------> BUY: " +
            Number(Math.round(response[3]*1.40*1.05+'e'+2)+'e-'+2) +
            "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
            Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
