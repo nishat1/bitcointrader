@@ -1,33 +1,77 @@
 <!doctype html>
-<html>
-
-  <style type="text/css">
-
-    div {
-      padding-left: 35px
-    }
-
-    h1 {
-      padding-left: 10px
-    }
-
-  </style>
-
+<html lang="en">
   <head>
-
     <title> SurreyBitcoins.com </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+
+      .navbar {
+        margin-bottom: 0;
+        border-radius: 0;
+        color: #FFF;
+        background: #1A1A1A;
+        padding: 0.5% 0;
+        font-size: 1.2em;
+        border: 0;
+      }
+      /* .navbar-brand {
+        float: left;
+        padding: 0 15px 15px;
+        min-height: 55px;
+      } */
+      .navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav a:focus,
+      .navbar-inverse .navbar-nav .active a:hover {
+        color: #FFF;
+        background-color: #1A1A1A;
+      }
+      .navbar-inverse .navbar-nav li a {
+        color: #D5D5D5;
+      }
+
+    </style>
 
   </head>
-
   <body BGCOLOR="#E5E5E5">
 
-    <h1> SurreyBitcoins.com </h1>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- remove navbar-brand if not using a picture -->
+          <a class="navbar-brand" href="index.html" style="font-size:1.2em">SurreyBitcoins</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <div id="btc"></div>
-    <div id="bch"></div>
-    <div id="eth"></div>
-    <div id="ltc"></div>
-    <br><br><br>
+    <h1 style="padding-left:10px"> SurreyBitcoins.com </h1>
+
+    <br>
+
+    <div id="btc" style="padding-left:35px"></div>
+    <div id="bch" style="padding-left:35px"></div>
+    <div id="eth" style="padding-left:35px"></div>
+    <div id="ltc" style="padding-left:35px"></div>
+
+    <br>
+    <br>
+    <br>
+
     <div id="disclaimer">
       <b> User will pay for the transaction fee for both buy and sell.</b>
       <br>
