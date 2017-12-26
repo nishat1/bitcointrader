@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+
+  <style type="text/css">
+
+    div {
+      padding-left: 35px
+    }
+
+    h1 {
+      padding-left: 10px
+    }
+
+  </style>
+
+  <head>
+
+    <title> Surrey Bitcoins Pvt Ltd </title>
+
+  </head>
+
+  <body>
+
+    <h1> Surrey Bitcoins Pvt Ltd </h1>
+
+    <div id="btc"></div>
+    <div id="bch"></div>
+    <div id="eth"></div>
+    <div id="ltc"></div>
+    <BR><BR><br>
+     <b> User will pay for the Transaction fee for both buy and sell</b>
+
+  </body>
+
+  <script>
+
+    const wss = new WebSocket('wss://api.bitfinex.com/ws/')
+
+    // holds channel ids for each response
+    var btc
+    var bch
+    var eth
+    var ltc
+
+    wss.onopen = () => {
+      // API keys setup here (See "Authenticated Channels")
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}))
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}))
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}))
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}))
+    }
+
+    wss.onmessage = (msg) => {
+      // console.log(msg.data)
+
+       var response = JSON.parse(msg.data)
+
+       // get channel id for each response
+       if(response.pair == "BTCUSD" ) {
+         btc = response.chanId
+       }
+       if(response.pair == "BCHUSD" ) {
+         bch = response.chanId
+       }
+       if(response.pair == "ETHUSD" ) {
+         eth = response.chanId
+       }
+       if(response.pair == "LTCUSD" ) {
+         ltc = response.chanId
+       }
+
+       var chanid = response[0]
+
+       if(chanid == btc) {
+         var hb = response[1]
+         if(hb != "hb") {
+           document.getElementById('btc').innerHTML = "<b>BITCOIN----------->BUY:</b> " +
+           Number(Math.round(response[3]*1.40*1.04+'e'+2)+'e-'+2) +
+           "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
+           Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
+         }
+       }
+
+       if(chanid == bch) {
+         var hb = response[1]
+         if(hb != "hb") {
+           document.getElementById('bch').innerHTML = "<BR><b>BITCOIN CASH-->BUY:</b> " +
+           Number(Math.round(response[3]*1.40*1.05+'e'+2)+'e-'+2) +
+           "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
+           Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
+         }
+       }
+
+       if(chanid == eth) {
+         var hb = response[1]
+         if(hb != "hb") {
+           document.getElementById('eth').innerHTML = "<BR><b>ETHEREUM------->BUY:</b> " +
+           Number(Math.round(response[3]*1.40*1.05+'e'+2)+'e-'+2) +
+           "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
+           Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
+         }
+       }
+
+       if(chanid == ltc) {
+         var hb = response[1]
+         if(hb != "hb") {
+           document.getElementById('ltc').innerHTML = "<BR><b>LITECOIN---------->BUY:</b> " +
+           Number(Math.round(response[3]*1.40*1.05+'e'+2)+'e-'+2) +
+           "&nbsp&nbsp&nbsp&nbsp<b>SELL:</b> " +
+           Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
+         }
+       }
+
+
+    }
+
+  </script>
+
+</html>
