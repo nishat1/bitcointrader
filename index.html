@@ -168,10 +168,13 @@
 
     const wss = new WebSocket('wss://api.bitfinex.com/ws/')
 
-    const conv_btc = 1.37
-    const conv_bch = 1.38
-    const conv_eth = 1.40
-    const conv_ltc = 1.38
+    const conv_btc = 1.35
+    const conv_bch = 1.35
+    const conv_eth = 1.35
+    const conv_ltc = 1.35
+    
+    const buy_margin = 1.04
+    const sell_margin = 0.94
 
     // holds channel ids for each response
     var btc
@@ -212,8 +215,8 @@
          var hb = response[1]
          if(hb != "hb") {
 
-           document.getElementById('BTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_btc*1.04 * 100) / 100).toFixed(2)
-           document.getElementById('BTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_btc*0.96 * 100) / 100).toFixed(2)
+           document.getElementById('BTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_btc*buy_margin * 100) / 100).toFixed(2)
+           document.getElementById('BTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_btc*sell_margin * 100) / 100).toFixed(2)
 
            // first table prototype
            // document.getElementById('btc').innerHTML = "<b>BITCOIN</b> -----------> <b>BUY:</b> " +
@@ -227,8 +230,8 @@
          var hb = response[1]
          if(hb != "hb") {
 
-           document.getElementById('BCHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_bch*1.04 * 100) / 100).toFixed(2)
-           document.getElementById('BCHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_bch*0.96 * 100) / 100).toFixed(2)
+           document.getElementById('BCHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_bch*buy_margin * 100) / 100).toFixed(2)
+           document.getElementById('BCHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_bch*sell_margin * 100) / 100).toFixed(2)
 
            // first table prototype
            // document.getElementById('bch').innerHTML = "<BR><b>BITCOIN CASH</b> --> <b>BUY:</b> " +
@@ -242,8 +245,8 @@
          var hb = response[1]
          if(hb != "hb") {
 
-           document.getElementById('ETHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_eth*1.04 * 100) / 100).toFixed(2)
-           document.getElementById('ETHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_eth*0.96 * 100) / 100).toFixed(2)
+           document.getElementById('ETHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_eth*buy_margin * 100) / 100).toFixed(2)
+           document.getElementById('ETHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_eth*sell_margin * 100) / 100).toFixed(2)
 
            // first table prototype
            // document.getElementById('eth').innerHTML = "<BR><b>ETHEREUM</b> -------> <b>BUY:</b> " +
@@ -257,8 +260,8 @@
          var hb = response[1]
          if(hb != "hb") {
 
-           document.getElementById('LTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_ltc*1.04 * 100) / 100).toFixed(2)
-           document.getElementById('LTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_ltc*0.96 * 100) / 100).toFixed(2)
+           document.getElementById('LTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_ltc*buy_margin * 100) / 100).toFixed(2)
+           document.getElementById('LTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_ltc*sell_margin * 100) / 100).toFixed(2)
 
            // first table prototype
            // document.getElementById('ltc').innerHTML = "<BR><b>LITECOIN</b> ----------> <b>BUY:</b> " +
