@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-111650202-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-111650202-1');
+    </script>
+
+    <title> SurreyBitcoins.com </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+
+      .navbar {
+        margin-bottom: 0;
+        border-radius: 0;
+        color: #FFF;
+        background: #1A1A1A;
+        padding: 0.5% 0;
+        font-size: 1.2em;
+        border: 0;
+      }
+      /* .navbar-brand {
+        float: left;
+        padding: 0 15px 15px;
+        min-height: 55px;
+      } */
+      .navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav a:focus,
+      .navbar-inverse .navbar-nav .active a:hover {
+        color: #FFF;
+        background-color: #1A1A1A;
+      }
+      .navbar-inverse .navbar-nav li a {
+        color: #A5A5A5;
+      }
+
+    </style>
+
+  </head>
+  <body BGCOLOR="#E5E5E5">
+
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- remove navbar-brand if not using a picture -->
+          <a class="navbar-brand" href="index.html" style="font-size:1.2em; color:#F2F2F2">SurreyBitcoins</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contactus.html">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+
+      <h1>
+        Admin
+        <button id="btnLogout" class="btn btn-action hide" style="float: right">Log out</button>
+      </h1>
+
+      <hr>
+
+      <!-- login form -->
+      <div id="login_inputs" style="padding-left:10px">
+
+        <input id="txtEmail" type="email" placeholder="Email" style="margin:10px">
+        <br>
+        <input id="txtPassword" type="password" placeholder="Password" style="margin:10px">
+        <br>
+        <button id="btnLogin" class="btn btn-action" style="margin:10px">Log in</button>
+
+      </div>
+      <!-- end of login form -->
+
+      <!-- Conv Rate Form (after logged in) -->
+      <div id="convRateForm" style="padding-left:10px">
+
+        <h3> Update Conversion Rates </h3>
+
+        <br>
+
+        <div style="padding-left:10px">
+          <h5>BTC Conversion Rate:</h5>
+          <input id="btcConvRate" type="number" step="0.001">
+
+          <br>
+          <br>
+
+          <h5>BCH Conversion Rate:</h5>
+          <input id="bchConvRate" type="number" step="0.001">
+
+          <br>
+          <br>
+
+          <h5>ETH Conversion Rate:</h5>
+          <input id="ethConvRate" type="number" step="0.001">
+
+          <br>
+          <br>
+
+          <h5>LTC Conversion Rate:</h5>
+          <input id="ltcConvRate" type="number" step="0.001">
+
+          <br>
+          <br>
+
+          <input type="button" value="Submit" onclick="exch_rate();"/>
+
+        </div>
+
+      </div>
+      <!-- end of conv rate form -->
+
+    </div>
+
+  </body>
+
+  <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyA9NQ0vjP_zyk0W74Poee1MIM6lIJK3qy8",
+      authDomain: "surreybitcoins-e2f1b.firebaseapp.com",
+      databaseURL: "https://surreybitcoins-e2f1b.firebaseio.com",
+      projectId: "surreybitcoins-e2f1b",
+      storageBucket: "surreybitcoins-e2f1b.appspot.com",
+      messagingSenderId: "816132455195"
+    };
+    firebase.initializeApp(config);
+
+    // get elements
+    const txtEmail = document.getElementById('txtEmail');
+    const txtPassword = document.getElementById('txtPassword');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+    const login_inputs = document.getElementById('login_inputs');
+    const convRateForm = document.getElementById('convRateForm');
+    const btcConvRate = document.getElementById('btcConvRate');
+    const bchConvRate = document.getElementById('bchConvRate');
+    const ethConvRate = document.getElementById('ethConvRate');
+    const ltcConvRate = document.getElementById('ltcConvRate');
+
+    // add login event
+    btnLogin.addEventListener('click', e => {
+      // get email and Password
+      const email = txtEmail.value;
+      const password = txtPassword.value;
+      const auth = firebase.auth();
+      // Sign in
+      const promise = auth.signInWithEmailAndPassword(email,password);
+      promise.catch(e => console.log(e.message));
+    });
+
+    btnLogout.addEventListener('click', e => {
+      firebase.auth().signOut();
+    });
+
+    // real-time listener
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if(firebaseUser) {
+        console.log(firebaseUser);
+        btnLogout.classList.remove('hide');
+        login_inputs.classList.add('hide');
+        convRateForm.classList.remove('hide');
+      } else {
+        console.log('not logged in');
+        btnLogout.classList.add('hide');
+        login_inputs.classList.remove('hide');
+        convRateForm.classList.add('hide');
+      }
+    });
+
+    // Create references
+    const dbConvRateObj = firebase.database().ref().child('conv_rates');
+
+    // // Sync object changes
+    dbConvRateObj.on('value', snap => {
+      bchConvRate.value = snap.val().bch;
+      btcConvRate.value = snap.val().btc;
+      ltcConvRate.value = snap.val().ltc;
+      ethConvRate.value = snap.val().eth;
+    });
+
+    function exch_rate() {
+
+      // const dbConvRateObj = firebase.database().ref().child('conv_rates');
+
+      dbConvRateObj.child('bch').set(bchConvRate.value);
+      dbConvRateObj.child('btc').set(btcConvRate.value);
+      dbConvRateObj.child('ltc').set(ltcConvRate.value);
+      dbConvRateObj.child('eth').set(ethConvRate.value);
+
+      window.location.href = "index.html";
+
+    }
+
+  </script>
+
+</html>
