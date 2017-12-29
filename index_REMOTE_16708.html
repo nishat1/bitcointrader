@@ -64,7 +64,6 @@
             <li class="active"><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contactus.html">Contact Us</a></li>
-            <li><a href="admin.html">Admin</a></li>
           </ul>
         </div>
       </div>
@@ -101,44 +100,39 @@
 
       <br>
 
-      <!-- <form>
-        BTC Conversion Rate: <input type="number" id="btc_conv"/><br/>
-        <input type="button" value="Submit" onclick="exch_rate();"/>
-      </form> -->
-
-      <br>
-
-      <div class="row">
-        <div class="col-xs-12">
-          <table class="table">
-            <tr style="background-color:#2A2A2A;color:#FFF">
-              <th>Cryptyocurrency</th>
-              <th style="text-align:right">Buy (CAD$)</th>
-              <th style="text-align:right">Sell (CAD$)</th>
-            </tr>
-            <tr>
-              <td><img src="img/bitcoin.png" style="max-width:20px">&emsp;Bitcoin</td>
-              <td id="BTCBUY" align="right"></td>
-              <td id="BTCSELL" align="right"></td>
-            </tr>
-            <tr>
-              <td><img src="img/bitcoincash.jpg" style="max-width:20px">&emsp;BitcoinCash</td>
-              <td id="BCHBUY" align="right"></td>
-              <td id="BCHSELL" align="right"></td>
-            </tr>
-            <tr>
-              <td><img src="img/ethereum.png" style="max-width:20px">&emsp;Ethereum</td>
-              <td id="ETHBUY" align="right"></td>
-              <td id="ETHSELL" align="right"></td>
-            </tr>
-            <tr>
-              <td><img src="img/litecoin.png" style="max-width:20px">&emsp;Litecoin</td>
-              <td id="LTCBUY" align="right"></td>
-              <td id="LTCSELL" align="right"></td>
-            </tr>
-          </table>
+      <!-- <div class="container"> -->
+        <div class="row">
+          <div class="col-xs-12">
+            <table class="table">
+              <tr style="background-color:#2A2A2A;color:#FFF">
+                <th>Cryptyocurrency</th>
+                <th style="text-align:right">Buy (CAD$)</th>
+                <th style="text-align:right">Sell (CAD$)</th>
+              </tr>
+              <tr>
+                <td><img src="img/bitcoin.png" style="max-width:20px">&emsp;Bitcoin</td>
+                <td id="BTCBUY" align="right"></td>
+                <td id="BTCSELL" align="right"></td>
+              </tr>
+              <tr>
+                <td><img src="img/bitcoincash.jpg" style="max-width:20px">&emsp;BitcoinCash</td>
+                <td id="BCHBUY" align="right"></td>
+                <td id="BCHSELL" align="right"></td>
+              </tr>
+              <tr>
+                <td><img src="img/ethereum.png" style="max-width:20px">&emsp;Ethereum</td>
+                <td id="ETHBUY" align="right"></td>
+                <td id="ETHSELL" align="right"></td>
+              </tr>
+              <tr>
+                <td><img src="img/litecoin.png" style="max-width:20px">&emsp;Litecoin</td>
+                <td id="LTCBUY" align="right"></td>
+                <td id="LTCSELL" align="right"></td>
+              </tr>
+            </table>
+          </div>
         </div>
-      </div>
+      <!-- </div> -->
 
       <hr>
 
@@ -170,52 +164,10 @@
 
   </body>
 
-
-  <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyA9NQ0vjP_zyk0W74Poee1MIM6lIJK3qy8",
-      authDomain: "surreybitcoins-e2f1b.firebaseapp.com",
-      databaseURL: "https://surreybitcoins-e2f1b.firebaseio.com",
-      projectId: "surreybitcoins-e2f1b",
-      storageBucket: "surreybitcoins-e2f1b.appspot.com",
-      messagingSenderId: "816132455195"
-    };
-    firebase.initializeApp(config);
-  </script>
-
   <script>
 
-    const wss = new WebSocket('wss://api.bitfinex.com/ws/');
+    const wss = new WebSocket('wss://api.bitfinex.com/ws/')
 
-    var conv_btc = 1.37;
-    var conv_bch = 1.38;
-    var conv_eth = 1.40;
-    var conv_ltc = 1.38;
-
-    // document.getElementById('btc_conv').value = conv_btc;
-    //
-    // function exch_rate() {
-    //   conv_btc = document.getElementById('btc_conv').value;
-    // }
-    //
-    // console.log(conv_btc);
-
-    // Create references
-    const dbConvRateObj = firebase.database().ref().child('conv_rates');
-
-    // Sync object changes
-    dbConvRateObj.on('value', snap => console.log(snap.val()));
-
-<<<<<<< HEAD
-    dbConvRateObj.on('value', snap => {
-      conv_bch = snap.val().bch;
-      conv_btc = snap.val().btc;
-      conv_ltc = snap.val().ltc;
-      conv_eth = snap.val().eth;
-    });
-=======
     const conv_btc = 1.335
     const conv_bch = 1.33
     const conv_eth = 1.33
@@ -223,54 +175,48 @@
     
     const buy_margin = 1.04
     const sell_margin = 0.94
->>>>>>> b88d42986b874d100a85dfbbcb0b0acd7c5ec4e2
 
     // holds channel ids for each response
-    var btc;
-    var bch;
-    var eth;
-    var ltc;
+    var btc
+    var bch
+    var eth
+    var ltc
 
     wss.onopen = () => {
       // API keys setup here (See "Authenticated Channels")
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}));
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}));
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}));
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}));
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}))
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}))
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}))
+      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}))
     }
 
     wss.onmessage = (msg) => {
       // console.log(msg.data)
 
-       var response = JSON.parse(msg.data);
+       var response = JSON.parse(msg.data)
 
        // get channel id for each response
        if(response.pair == "BTCUSD" ) {
-         btc = response.chanId;
+         btc = response.chanId
        }
        if(response.pair == "BCHUSD" ) {
-         bch = response.chanId;
+         bch = response.chanId
        }
        if(response.pair == "ETHUSD" ) {
-         eth = response.chanId;
+         eth = response.chanId
        }
        if(response.pair == "LTCUSD" ) {
-         ltc = response.chanId;
+         ltc = response.chanId
        }
 
-       var chanid = response[0];
+       var chanid = response[0]
 
        if(chanid == btc) {
-         var hb = response[1];
+         var hb = response[1]
          if(hb != "hb") {
 
-<<<<<<< HEAD
-           document.getElementById('BTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_btc*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('BTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_btc*0.96 * 100) / 100).toFixed(2);
-=======
            document.getElementById('BTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_btc*buy_margin * 100) / 100).toFixed(2)
            document.getElementById('BTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_btc*sell_margin * 100) / 100).toFixed(2)
->>>>>>> b88d42986b874d100a85dfbbcb0b0acd7c5ec4e2
 
            // first table prototype
            // document.getElementById('btc').innerHTML = "<b>BITCOIN</b> -----------> <b>BUY:</b> " +
@@ -281,16 +227,11 @@
        }
 
        if(chanid == bch) {
-         var hb = response[1];
+         var hb = response[1]
          if(hb != "hb") {
 
-<<<<<<< HEAD
-           document.getElementById('BCHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_bch*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('BCHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_bch*0.96 * 100) / 100).toFixed(2);
-=======
            document.getElementById('BCHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_bch*buy_margin * 100) / 100).toFixed(2)
            document.getElementById('BCHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_bch*sell_margin * 100) / 100).toFixed(2)
->>>>>>> b88d42986b874d100a85dfbbcb0b0acd7c5ec4e2
 
            // first table prototype
            // document.getElementById('bch').innerHTML = "<BR><b>BITCOIN CASH</b> --> <b>BUY:</b> " +
@@ -301,16 +242,11 @@
        }
 
        if(chanid == eth) {
-         var hb = response[1];
+         var hb = response[1]
          if(hb != "hb") {
 
-<<<<<<< HEAD
-           document.getElementById('ETHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_eth*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('ETHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_eth*0.96 * 100) / 100).toFixed(2);
-=======
            document.getElementById('ETHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_eth*buy_margin * 100) / 100).toFixed(2)
            document.getElementById('ETHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_eth*sell_margin * 100) / 100).toFixed(2)
->>>>>>> b88d42986b874d100a85dfbbcb0b0acd7c5ec4e2
 
            // first table prototype
            // document.getElementById('eth').innerHTML = "<BR><b>ETHEREUM</b> -------> <b>BUY:</b> " +
@@ -321,16 +257,11 @@
        }
 
        if(chanid == ltc) {
-         var hb = response[1];
+         var hb = response[1]
          if(hb != "hb") {
 
-<<<<<<< HEAD
-           document.getElementById('LTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_ltc*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('LTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_ltc*0.96 * 100) / 100).toFixed(2);
-=======
            document.getElementById('LTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_ltc*buy_margin * 100) / 100).toFixed(2)
            document.getElementById('LTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_ltc*sell_margin * 100) / 100).toFixed(2)
->>>>>>> b88d42986b874d100a85dfbbcb0b0acd7c5ec4e2
 
            // first table prototype
            // document.getElementById('ltc').innerHTML = "<BR><b>LITECOIN</b> ----------> <b>BUY:</b> " +
