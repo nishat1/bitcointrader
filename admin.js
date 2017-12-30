@@ -9,6 +9,8 @@ const btcConvRate = document.getElementById('btcConvRate');
 const bchConvRate = document.getElementById('bchConvRate');
 const ethConvRate = document.getElementById('ethConvRate');
 const ltcConvRate = document.getElementById('ltcConvRate');
+const buyMargin = document.getElementById('buyMargin');
+const sellMargin = document.getElementById('sellMargin');
 
 // add login event
 btnLogin.addEventListener('click', e => {
@@ -42,6 +44,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 
 // Create references
 const dbConvRateObj = firebase.database().ref().child('conv_rates');
+const dbMarginObj = firebase.database().ref().child('margins');
 
 // // Sync object changes
 dbConvRateObj.on('value', snap => {
@@ -49,6 +52,11 @@ dbConvRateObj.on('value', snap => {
   btcConvRate.value = snap.val().btc;
   ltcConvRate.value = snap.val().ltc;
   ethConvRate.value = snap.val().eth;
+});
+
+dbMarginObj.on('value', snap => {
+  buyMargin.value = snap.val().buy;
+  sellMargin.value = snap.val().sell;
 });
 
 function exch_rate() {
@@ -59,6 +67,9 @@ function exch_rate() {
   dbConvRateObj.child('btc').set(btcConvRate.value);
   dbConvRateObj.child('ltc').set(ltcConvRate.value);
   dbConvRateObj.child('eth').set(ethConvRate.value);
+
+  dbMarginObj.child('buy').set(buyMargin.value);
+  dbMarginObj.child('sell').set(sellMargin.value);
 
   window.location.href = "index.html";
 

@@ -5,8 +5,8 @@ var conv_bch;
 var conv_eth;
 var conv_ltc;
 
-const buy_margin = 1.04;
-const sell_margin = 0.94;
+var buy_margin;
+var sell_margin;
 
 const currencyRadioBtn = document.getElementsByName('currency');
 const buysellRadioBtn = document.getElementsByName('buysell');
@@ -22,6 +22,7 @@ const calculationType = document.getElementsByName('calculationType');
 
 // Create references
 const dbConvRateObj = firebase.database().ref().child('conv_rates');
+const dbMarginObj = firebase.database().ref().child('margins');
 
 // Sync object changes
 dbConvRateObj.on('value', snap => console.log(snap.val()));
@@ -31,6 +32,11 @@ dbConvRateObj.on('value', snap => {
   conv_btc = snap.val().btc;
   conv_ltc = snap.val().ltc;
   conv_eth = snap.val().eth;
+});
+
+dbMarginObj.on('value', snap => {
+  buy_margin = snap.val().buy;
+  sell_margin = snap.val().sell;
 });
 
 // holds channel ids for each response
