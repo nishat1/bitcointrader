@@ -70,42 +70,11 @@
       </div>
     </nav>
 
-    <!-- <img src="img/bitcoin.jpg" style="max-width:100vw"> -->
-
-    <!-- <div id="myCarousel" class="carousel slide" data-ride="carousel">
-
-      <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-        <li data-target="#myCarousel" data-slide-to="3"></li>
-      </ol>
-
-      <div class="carousel-inner" role="listbox">
-        <div class="item active">
-          <img src="img/bitcoin.jpg">
-        </div>
-        <div class="item">
-          <img src="img/bitcoincash.png">
-        </div>
-        <div class="item">
-          <img src="img/ethereum.jpg">
-        </div>
-      </div>
-
-    </div>  -->
-
     <div class="container">
-      <!-- <h1 style="padding-left:10px"> SurreyBitcoins.com </h1> -->
+
       <h1> SurreyBitcoins.com </h1>
 
       <br>
-
-      <!-- <form>
-        BTC Conversion Rate: <input type="number" id="btc_conv"/><br/>
-        <input type="button" value="Submit" onclick="exch_rate();"/>
-      </form> -->
-
       <br>
 
       <div class="row">
@@ -140,6 +109,64 @@
         </div>
       </div>
 
+      <div class="container">
+        <div class="row">
+          <h4><a href="#hidden" data-toggle="collapse">Interested? Click here to buy/sell.</a></h4>
+          <div id="hidden" class="collapse">
+            <hr>
+            <h3>Calculate Coins</h3>
+            <br>
+
+            <div class="col-xs-12">
+              <form style="padding-left:10px">
+
+                <h5>Buy or Sell:</h5>
+                <div style="padding-left:10px">
+                  <label class="radio-inline"><input type="radio" name="buysell" value="buy"/>  Buy</label>
+                  <label class="radio-inline"><input type="radio" name="buysell" value="sell"/>  Sell</label>
+                </div>
+
+                <h5>Choose a cryptocurrency:</h5>
+                <div style="padding-left:10px">
+                  <label class="radio-inline"><input type="radio" name="currency" value="btc"/>  Bitcoin</label>
+                  <label class="radio-inline"><input type="radio" name="currency" value="bch"/>  Bitcoin Cash</label>
+                  <label class="radio-inline"><input type="radio" name="currency" value="eth"/>  Ethereum</label>
+                  <label class="radio-inline"><input type="radio" name="currency" value="ltc"/>  Litecoin</label>
+                </div>
+
+                <h5>Enter amount:</h5>
+                <!-- <div class="col-xs-6"> -->
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                    <input type="number" class="form-control" id="buySellAmount" step="0.01" placeholder="0.00"/>
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-bitcoin"></i></span>
+                    <input type="number" class="form-control" id="bitcoinAmount" step="0.01" placeholder="0.00"/>
+                  </div>
+                <!-- </div> -->
+
+                <br>
+
+                <input class="btn btn-action" type="button" value="Calculate" onclick="calculateCoins();"/>
+
+              </form>
+
+              <h5 id="calculatedAmount" style="padding-left:10px">
+                <b>Output Ex)</b>
+                <p></p>
+                <b>Number of coins:</b> 1.0234234456 Bitcoins @ $19000/Bitcoin
+              </h5>
+              <h5 id="calculatedAmountBox2" style="padding-left:10px">
+                <b>Cost of coins:</b> &emsp;&nbsp;&nbsp;$18743.00 for 1 Bitcoin(s)
+              </h5>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       <hr>
 
       <div >
@@ -170,171 +197,8 @@
 
   </body>
 
-
   <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyA9NQ0vjP_zyk0W74Poee1MIM6lIJK3qy8",
-      authDomain: "surreybitcoins-e2f1b.firebaseapp.com",
-      databaseURL: "https://surreybitcoins-e2f1b.firebaseio.com",
-      projectId: "surreybitcoins-e2f1b",
-      storageBucket: "surreybitcoins-e2f1b.appspot.com",
-      messagingSenderId: "816132455195"
-    };
-    firebase.initializeApp(config);
-  </script>
-
-  <script>
-
-    const wss = new WebSocket('wss://api.bitfinex.com/ws/');
-
-    var conv_btc;
-    var conv_bch;
-    var conv_eth;
-    var conv_ltc;
-
-    const buy_margin = 1.04
-    const sell_margin = 0.94
-
-    // document.getElementById('btc_conv').value = conv_btc;
-    //
-    // function exch_rate() {
-    //   conv_btc = document.getElementById('btc_conv').value;
-    // }
-    //
-    // console.log(conv_btc);
-
-    // Create references
-    const dbConvRateObj = firebase.database().ref().child('conv_rates');
-
-    // Sync object changes
-    dbConvRateObj.on('value', snap => console.log(snap.val()));
-
-    dbConvRateObj.on('value', snap => {
-      conv_bch = snap.val().bch;
-      conv_btc = snap.val().btc;
-      conv_ltc = snap.val().ltc;
-      conv_eth = snap.val().eth;
-    });
-
-    // holds channel ids for each response
-    var btc;
-    var bch;
-    var eth;
-    var ltc;
-
-    wss.onopen = () => {
-      // API keys setup here (See "Authenticated Channels")
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}));
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}));
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}));
-      wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}));
-    }
-
-    wss.onmessage = (msg) => {
-      // console.log(msg.data)
-
-       var response = JSON.parse(msg.data);
-
-       // get channel id for each response
-       if(response.pair == "BTCUSD" ) {
-         btc = response.chanId;
-       }
-       if(response.pair == "BCHUSD" ) {
-         bch = response.chanId;
-       }
-       if(response.pair == "ETHUSD" ) {
-         eth = response.chanId;
-       }
-       if(response.pair == "LTCUSD" ) {
-         ltc = response.chanId;
-       }
-
-       var chanid = response[0];
-
-       if(chanid == btc) {
-         var hb = response[1];
-         if(hb != "hb") {
-
-           document.getElementById('BTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_btc*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('BTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_btc*0.96 * 100) / 100).toFixed(2);
-
-           document.getElementById('BTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_btc*buy_margin * 100) / 100).toFixed(2)
-           document.getElementById('BTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_btc*sell_margin * 100) / 100).toFixed(2)
-
-
-           // first table prototype
-           // document.getElementById('btc').innerHTML = "<b>BITCOIN</b> -----------> <b>BUY:</b> " +
-           // Number(Math.round(response[3]*conv_btc*1.04+'e'+2)+'e-'+2) +
-           // "&emsp;<b>SELL:</b> " +
-           // Number(Math.round(response[1]*conv_btc*0.96+'e'+2)+'e-'+2)
-         }
-       }
-
-       if(chanid == bch) {
-         var hb = response[1];
-         if(hb != "hb") {
-
-
-           document.getElementById('BCHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_bch*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('BCHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_bch*0.96 * 100) / 100).toFixed(2);
-
-           document.getElementById('BCHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_bch*buy_margin * 100) / 100).toFixed(2)
-           document.getElementById('BCHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_bch*sell_margin * 100) / 100).toFixed(2)
-
-
-           // first table prototype
-           // document.getElementById('bch').innerHTML = "<BR><b>BITCOIN CASH</b> --> <b>BUY:</b> " +
-           // Number(Math.round(response[3]*1.40*1.04+'e'+2)+'e-'+2) +
-           // "&emsp;<b>SELL:</b> " +
-           // Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
-         }
-       }
-
-       if(chanid == eth) {
-         var hb = response[1];
-         if(hb != "hb") {
-
-
-           document.getElementById('ETHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_eth*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('ETHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_eth*0.96 * 100) / 100).toFixed(2);
-
-           document.getElementById('ETHBUY').innerHTML = parseFloat(Math.round(response[3]*conv_eth*buy_margin * 100) / 100).toFixed(2)
-           document.getElementById('ETHSELL').innerHTML = parseFloat(Math.round(response[1]*conv_eth*sell_margin * 100) / 100).toFixed(2)
-
-
-           // first table prototype
-           // document.getElementById('eth').innerHTML = "<BR><b>ETHEREUM</b> -------> <b>BUY:</b> " +
-           // Number(Math.round(response[3]*1.40*1.04+'e'+2)+'e-'+2) +
-           // "&emsp;<b>SELL:</b> " +
-           // Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
-         }
-       }
-
-       if(chanid == ltc) {
-         var hb = response[1];
-         if(hb != "hb") {
-
-
-           document.getElementById('LTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_ltc*1.04 * 100) / 100).toFixed(2);
-           document.getElementById('LTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_ltc*0.96 * 100) / 100).toFixed(2);
-
-           document.getElementById('LTCBUY').innerHTML = parseFloat(Math.round(response[3]*conv_ltc*buy_margin * 100) / 100).toFixed(2)
-           document.getElementById('LTCSELL').innerHTML = parseFloat(Math.round(response[1]*conv_ltc*sell_margin * 100) / 100).toFixed(2)
-
-
-           // first table prototype
-           // document.getElementById('ltc').innerHTML = "<BR><b>LITECOIN</b> ----------> <b>BUY:</b> " +
-           // Number(Math.round(response[3]*1.40*1.04+'e'+2)+'e-'+2) +
-           // "&emsp;<b>SELL:</b> " +
-           // Number(Math.round(response[1]*1.40*0.96+'e'+2)+'e-'+2)
-         }
-       }
-
-
-    }
-
-  </script>
+  <script src="firebaseInit.js"></script>
+  <script src="index.js"></script>
 
 </html>

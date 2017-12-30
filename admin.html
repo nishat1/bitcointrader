@@ -74,7 +74,7 @@
 
       <h1>
         Admin
-        <button id="btnLogout" class="btn btn-action hide" style="float: right">Log out</button>
+        <button id="btnLogout" class="btn btn-default hide" style="float: right">Log out</button>
       </h1>
 
       <hr>
@@ -82,11 +82,17 @@
       <!-- login form -->
       <div id="login_inputs" style="padding-left:10px">
 
-        <input id="txtEmail" type="email" placeholder="Email" style="margin:10px">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+          <input id="txtEmail" type="email" class="form-control" placeholder="Email">
+        </div>
         <br>
-        <input id="txtPassword" type="password" placeholder="Password" style="margin:10px">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+          <input id="txtPassword" type="password" class="form-control" placeholder="Password">
+        </div>
         <br>
-        <button id="btnLogin" class="btn btn-action" style="margin:10px">Log in</button>
+        <button id="btnLogin" class="btn btn-action">Log in</button>
 
       </div>
       <!-- end of login form -->
@@ -123,7 +129,7 @@
           <br>
           <br>
 
-          <input type="button" value="Submit" onclick="exch_rate();"/>
+          <input type="button" value="Submit" class="btn btn-action" onclick="exch_rate();"/>
 
         </div>
 
@@ -135,84 +141,7 @@
   </body>
 
   <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-  <script>
-    // Initialize Firebase
-    var config = {
-      apiKey: "AIzaSyA9NQ0vjP_zyk0W74Poee1MIM6lIJK3qy8",
-      authDomain: "surreybitcoins-e2f1b.firebaseapp.com",
-      databaseURL: "https://surreybitcoins-e2f1b.firebaseio.com",
-      projectId: "surreybitcoins-e2f1b",
-      storageBucket: "surreybitcoins-e2f1b.appspot.com",
-      messagingSenderId: "816132455195"
-    };
-    firebase.initializeApp(config);
-
-    // get elements
-    const txtEmail = document.getElementById('txtEmail');
-    const txtPassword = document.getElementById('txtPassword');
-    const btnLogin = document.getElementById('btnLogin');
-    const btnLogout = document.getElementById('btnLogout');
-    const login_inputs = document.getElementById('login_inputs');
-    const convRateForm = document.getElementById('convRateForm');
-    const btcConvRate = document.getElementById('btcConvRate');
-    const bchConvRate = document.getElementById('bchConvRate');
-    const ethConvRate = document.getElementById('ethConvRate');
-    const ltcConvRate = document.getElementById('ltcConvRate');
-
-    // add login event
-    btnLogin.addEventListener('click', e => {
-      // get email and Password
-      const email = txtEmail.value;
-      const password = txtPassword.value;
-      const auth = firebase.auth();
-      // Sign in
-      const promise = auth.signInWithEmailAndPassword(email,password);
-      promise.catch(e => console.log(e.message));
-    });
-
-    btnLogout.addEventListener('click', e => {
-      firebase.auth().signOut();
-    });
-
-    // real-time listener
-    firebase.auth().onAuthStateChanged(firebaseUser => {
-      if(firebaseUser) {
-        console.log(firebaseUser);
-        btnLogout.classList.remove('hide');
-        login_inputs.classList.add('hide');
-        convRateForm.classList.remove('hide');
-      } else {
-        console.log('not logged in');
-        btnLogout.classList.add('hide');
-        login_inputs.classList.remove('hide');
-        convRateForm.classList.add('hide');
-      }
-    });
-
-    // Create references
-    const dbConvRateObj = firebase.database().ref().child('conv_rates');
-
-    // // Sync object changes
-    dbConvRateObj.on('value', snap => {
-      bchConvRate.value = snap.val().bch;
-      btcConvRate.value = snap.val().btc;
-      ltcConvRate.value = snap.val().ltc;
-      ethConvRate.value = snap.val().eth;
-    });
-
-    function exch_rate() {
-
-      // const dbConvRateObj = firebase.database().ref().child('conv_rates');
-
-      dbConvRateObj.child('bch').set(bchConvRate.value);
-      dbConvRateObj.child('btc').set(btcConvRate.value);
-      dbConvRateObj.child('ltc').set(ltcConvRate.value);
-      dbConvRateObj.child('eth').set(ethConvRate.value);
-
-      window.location.href = "index.html";
-
-    }
-
-  </script>
+  <script src="firebaseInit.js"></script>
+  <script src="admin.js"></script>
 
 </html>
