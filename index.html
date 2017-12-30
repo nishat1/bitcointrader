@@ -122,25 +122,31 @@
 
                 <h5>Buy or Sell:</h5>
                 <div style="padding-left:10px">
-                  <label class="radio-inline"><input type="radio" name="buysell" value="buy"/>  Buy</label>
+                  <label class="radio-inline"><input type="radio" name="buysell" value="buy" checked="checked"/>  Buy</label>
                   <label class="radio-inline"><input type="radio" name="buysell" value="sell"/>  Sell</label>
                 </div>
 
                 <h5>Choose a cryptocurrency:</h5>
                 <div style="padding-left:10px">
-                  <label class="radio-inline"><input type="radio" name="currency" value="btc"/>  Bitcoin</label>
+                  <label class="radio-inline"><input type="radio" name="currency" value="btc" checked="checked"/>  Bitcoin</label>
                   <label class="radio-inline"><input type="radio" name="currency" value="bch"/>  Bitcoin Cash</label>
                   <label class="radio-inline"><input type="radio" name="currency" value="eth"/>  Ethereum</label>
                   <label class="radio-inline"><input type="radio" name="currency" value="ltc"/>  Litecoin</label>
                 </div>
 
-                <h5>Enter amount:</h5>
+                <h5>Enter:</h5>
+                <div style="padding-left:10px">
+                  <label class="radio-inline"><input type="radio" name="calculationType" value="dollarAmount" checked="checked" onclick="calculationDollarType();"/>  Dollar Amount</label>
+                  <label class="radio-inline"><input type="radio" name="calculationType" value="cryptoAmount" onclick="calculationCryptoType();"/>  Cryptocurrency Amount</label>
+                </div>
+
+                <h5></h5>
                 <!-- <div class="col-xs-6"> -->
-                  <div class="input-group">
+                  <div class="input-group" id="dollarInput">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
                     <input type="number" class="form-control" id="buySellAmount" step="0.01" placeholder="0.00"/>
                   </div>
-                  <div class="input-group">
+                  <div class="input-group hide" id="cryptoInput">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-bitcoin"></i></span>
                     <input type="number" class="form-control" id="bitcoinAmount" step="0.01" placeholder="0.00"/>
                   </div>
@@ -148,17 +154,19 @@
 
                 <br>
 
-                <input class="btn btn-action" type="button" value="Calculate" onclick="calculateCoins();"/>
+                <input class="btn btn-action" id="calculateBtn" type="button" value="Calculate" onclick="calculateCoins();"/>
 
               </form>
 
               <h5 id="calculatedAmount" style="padding-left:10px">
                 <b>Output Ex)</b>
                 <p></p>
-                <b>Number of coins:</b> 1.0234234456 Bitcoins @ $19000/Bitcoin
+                <b>Number of coins:</b> 1.0234234456 Bitcoin @ $19000/Bitcoin
               </h5>
-              <h5 id="calculatedAmountBox2" style="padding-left:10px">
-                <b>Cost of coins:</b> &emsp;&nbsp;&nbsp;$18743.00 for 1 Bitcoin(s)
+              <h5 id="calculatedAmountBox2" style="padding-left:10px" class="hide">
+                <b>Output Ex)</b>
+                <p></p>
+                <b>Cost of coins:</b> $18743.00 for 1 Bitcoin(s)
               </h5>
 
             </div>
