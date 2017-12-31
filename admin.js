@@ -5,10 +5,10 @@ const btnLogin = document.getElementById('btnLogin');
 const btnLogout = document.getElementById('btnLogout');
 const login_inputs = document.getElementById('login_inputs');
 const convRateForm = document.getElementById('convRateForm');
-const btcConvRate = document.getElementById('btcConvRate');
-const bchConvRate = document.getElementById('bchConvRate');
-const ethConvRate = document.getElementById('ethConvRate');
-const ltcConvRate = document.getElementById('ltcConvRate');
+const btcTXFee = document.getElementById('btcTXFee');
+const bchTXFee = document.getElementById('bchTXFee');
+const ethTXFee = document.getElementById('ethTXFee');
+const ltcTXFee = document.getElementById('ltcTXFee');
 const buyMargin = document.getElementById('buyMargin');
 const sellMargin = document.getElementById('sellMargin');
 
@@ -23,6 +23,7 @@ btnLogin.addEventListener('click', e => {
   promise.catch(e => console.log(e.message));
 });
 
+// listener for logout button
 btnLogout.addEventListener('click', e => {
   firebase.auth().signOut();
 });
@@ -43,15 +44,15 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 });
 
 // Create references
-const dbConvRateObj = firebase.database().ref().child('conv_rates');
+const dbTXFee = firebase.database().ref().child('txFee');
 const dbMarginObj = firebase.database().ref().child('margins');
 
-// // Sync object changes
-dbConvRateObj.on('value', snap => {
-  bchConvRate.value = snap.val().bch;
-  btcConvRate.value = snap.val().btc;
-  ltcConvRate.value = snap.val().ltc;
-  ethConvRate.value = snap.val().eth;
+// Sync object changes
+dbTXFee.on('value', snap => {
+  bchTXFee.value = snap.val().bch;
+  btcTXFee.value = snap.val().btc;
+  ltcTXFee.value = snap.val().ltc;
+  ethTXFee.value = snap.val().eth;
 });
 
 dbMarginObj.on('value', snap => {
@@ -61,12 +62,10 @@ dbMarginObj.on('value', snap => {
 
 function exch_rate() {
 
-  // const dbConvRateObj = firebase.database().ref().child('conv_rates');
-
-  dbConvRateObj.child('bch').set(bchConvRate.value);
-  dbConvRateObj.child('btc').set(btcConvRate.value);
-  dbConvRateObj.child('ltc').set(ltcConvRate.value);
-  dbConvRateObj.child('eth').set(ethConvRate.value);
+  dbTXFee.child('bch').set(bchTXFee.value);
+  dbTXFee.child('btc').set(btcTXFee.value);
+  dbTXFee.child('ltc').set(ltcTXFee.value);
+  dbTXFee.child('eth').set(ethTXFee.value);
 
   dbMarginObj.child('buy').set(buyMargin.value);
   dbMarginObj.child('sell').set(sellMargin.value);
@@ -74,3 +73,16 @@ function exch_rate() {
   window.location.href = "index.html";
 
 }
+
+// Sync object changes again
+dbTXFee.on('value', snap => {
+  bchTXFee.value = snap.val().bch;
+  btcTXFee.value = snap.val().btc;
+  ltcTXFee.value = snap.val().ltc;
+  ethTXFee.value = snap.val().eth;
+});
+
+dbMarginObj.on('value', snap => {
+  buyMargin.value = snap.val().buy;
+  sellMargin.value = snap.val().sell;
+});

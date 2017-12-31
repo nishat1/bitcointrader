@@ -1,14 +1,6 @@
 const wss = new WebSocket('wss://api.bitfinex.com/ws/');
 const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC&tsyms=CAD";
 
-var conv_btc;
-var conv_bch;
-var conv_eth;
-var conv_ltc;
-
-var buy_margin;
-var sell_margin;
-
 const currencyRadioBtn = document.getElementsByName('currency');
 const buysellRadioBtn = document.getElementsByName('buysell');
 const buySellAmount = document.getElementById('buySellAmount');
@@ -22,41 +14,33 @@ const calculatedAmountBox2 = document.getElementById('calculatedAmountBox2');
 const calculationType = document.getElementsByName('calculationType');
 
 // Create references
-const dbConvRateObj = firebase.database().ref().child('conv_rates');
 const dbMarginObj = firebase.database().ref().child('margins');
+const dbTXFee = firebase.database().ref().child('txFee');
 
-// Sync object changes
-dbConvRateObj.on('value', snap => console.log(snap.val()));
+var buy_margin;
+var sell_margin;
+var txFeeBTC;
+var txFeeBCH;
+var txFeeETH;
+var txFeeLTC;
 
-dbConvRateObj.on('value', snap => {
-  conv_bch = snap.val().bch;
-  conv_btc = snap.val().btc;
-  conv_ltc = snap.val().ltc;
-  conv_eth = snap.val().eth;
-});
-
-
+// get buy and sell margin from firebase database
 dbMarginObj.on('value', snap => {
+  console.log(snap.val());
   buy_margin = snap.val().buy;
   sell_margin = snap.val().sell;
 });
 
-// holds channel ids for each response
-var btc;
-var bch;
-var eth;
-var ltc;
+dbTXFee.on('value', snap => {
+  console.log(snap.val());
+  txFeeBTC = snap.val().btc;
+  txFeeBCH = snap.val().bch;
+  txFeeETH = snap.val().eth;
+  txFeeLTC = snap.val().ltc;
+});
 
-// wss.onopen = () => {
-//   // API keys setup here (See "Authenticated Channels")
-//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}));
-//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}));
-//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}));
-//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}));
-// }
-
+// create a new XMLHttpRequest object based on browser
 var xhttp;
-
 if (window.XMLHttpRequest) {
   // code for modern browsers
   xhttp = new XMLHttpRequest();
@@ -65,53 +49,62 @@ if (window.XMLHttpRequest) {
   xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 }
 
+// prices requested from cryptocompare server
 var btc_price;
 var bch_price;
 var eth_price;
 var ltc_price;
 
+// prices with buy margin
 var btcValBuy;
 var bchValBuy;
 var ethValBuy;
 var ltcValBuy;
 
+// prices with sell margin
 var btcValSell;
 var bchValSell;
 var ethValSell;
 var ltcValSell;
 
 // run intially
-// if(buy_margin != null) {
-
-// }
+setTimeout(requestHttp,1000);
 
 // request again every 10 seconds
-setTimeout(requestHttp,1000);
 setInterval(requestHttp,10000);
 function requestHttp() {
 
+  // open url with get request
   xhttp.open("GET", url, true);
 
+  // wait for success response
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
-      console.log(JSON.parse(this.responseText));
-      btc_price = JSON.parse(this.responseText).BTC.CAD;
-      bch_price = JSON.parse(this.responseText).BCH.CAD;
-      eth_price = JSON.parse(this.responseText).ETH.CAD;
-      ltc_price = JSON.parse(this.responseText).LTC.CAD;
 
+      // get price for each coin
+      btc_price = JSON.parse(this.responseText).BTC.CAD; // bitcoin
+      bch_price = JSON.parse(this.responseText).BCH.CAD; // bitcoin cash
+      eth_price = JSON.parse(this.responseText).ETH.CAD; // ethereum
+      ltc_price = JSON.parse(this.responseText).LTC.CAD; // litecoin
+
+      // add margin rates
+      // bitcoin
       btcValBuy = parseFloat(Math.round(btc_price*buy_margin*100)/100).toFixed(2);
       btcValSell = parseFloat(Math.round(btc_price*sell_margin*100)/100).toFixed(2);
 
+      // bitcoin cash
       bchValBuy = parseFloat(Math.round(bch_price*buy_margin*100)/100).toFixed(2);
       bchValSell = parseFloat(Math.round(bch_price*sell_margin*100)/100).toFixed(2);
 
+      // ethereum
       ethValBuy = parseFloat(Math.round(eth_price*buy_margin*100)/100).toFixed(2);
       ethValSell = parseFloat(Math.round(eth_price*sell_margin*100)/100).toFixed(2);
 
+      // litecoin
       ltcValBuy = parseFloat(Math.round(ltc_price*buy_margin*100)/100).toFixed(2);
       ltcValSell = parseFloat(Math.round(ltc_price*sell_margin*100)/100).toFixed(2);
 
+      // update html table
       document.getElementById('BTCBUY').innerHTML = btcValBuy;
       document.getElementById('BTCSELL').innerHTML = btcValSell;
 
@@ -126,107 +119,40 @@ function requestHttp() {
     }
   }
 
+  // send request
   xhttp.send();
 }
 
-
-
-// wss.onmessage = (msg) => {
-//   // console.log(msg.data)
-//
-//    var response = JSON.parse(msg.data);
-//
-//    // get channel id for each response
-//    if(response.pair == "BTCUSD" ) {
-//      btc = response.chanId;
-//    }
-//    if(response.pair == "BCHUSD" ) {
-//      bch = response.chanId;
-//    }
-//    if(response.pair == "ETHUSD" ) {
-//      eth = response.chanId;
-//    }
-//    if(response.pair == "LTCUSD" ) {
-//      ltc = response.chanId;
-//    }
-//
-//    var chanid = response[0];
-//
-//    if(chanid == btc) {
-//      var hb = response[1];
-//      if(hb != "hb") {
-//
-//        // btcValBuy = parseFloat(Math.round(response[3]*conv_btc*buy_margin * 100) / 100).toFixed(2);
-//        btcValSell = parseFloat(Math.round(response[1]*conv_btc*sell_margin * 100) / 100).toFixed(2);
-//
-//        // document.getElementById('BTCBUY').innerHTML = btcValBuy;
-//        document.getElementById('BTCSELL').innerHTML = btcValSell;
-//      }
-//    }
-//
-//    if(chanid == bch) {
-//      var hb = response[1];
-//      if(hb != "hb") {
-//
-//        bchValBuy = parseFloat(Math.round(response[3]*conv_bch*buy_margin * 100) / 100).toFixed(2);
-//        bchValSell = parseFloat(Math.round(response[1]*conv_bch*sell_margin * 100) / 100).toFixed(2);
-//
-//        document.getElementById('BCHBUY').innerHTML = bchValBuy;
-//        document.getElementById('BCHSELL').innerHTML = bchValSell;
-//      }
-//    }
-//
-//    if(chanid == eth) {
-//      var hb = response[1];
-//      if(hb != "hb") {
-//
-//        ethValBuy = parseFloat(Math.round(response[3]*conv_eth*buy_margin * 100) / 100).toFixed(2);
-//        ethValSell = parseFloat(Math.round(response[1]*conv_eth*sell_margin * 100) / 100).toFixed(2);
-//
-//        document.getElementById('ETHBUY').innerHTML = ethValBuy;
-//        document.getElementById('ETHSELL').innerHTML = ethValSell;
-//      }
-//    }
-//
-//    if(chanid == ltc) {
-//      var hb = response[1];
-//      if(hb != "hb") {
-//
-//        ltcValBuy = parseFloat(Math.round(response[3]*conv_ltc*buy_margin * 100) / 100).toFixed(2);
-//        ltcValSell = parseFloat(Math.round(response[1]*conv_ltc*sell_margin * 100) / 100).toFixed(2);
-//
-//        document.getElementById('LTCBUY').innerHTML = ltcValBuy;
-//        document.getElementById('LTCSELL').innerHTML = ltcValSell;
-//      }
-//    }
-//
-//
-// }
-
+// called after calculate button is clicked
 function calculateCoins() {
+
+  // get values from form
   var amountVal = buySellAmount.value;
   var bitcoinAmountVal = bitcoinAmount.value;
+
+  // output variables
   var coinVal;
   var coinType;
   var txFee;
 
+  // check which radio buttons are checked
   if(buysellRadioBtn[0].checked) {
     if(currencyRadioBtn[0].checked) {
       coinVal = btcValBuy;
       coinType = " Bitcoin";
-      txFee = "0.0025 BTC";
+      txFee = txFeeBTC + " BTC";
     } else if(currencyRadioBtn[1].checked) {
       coinVal = bchValBuy;
       coinType = " Bitcoin Cash";
-      txFee = "0.001 BCH";
+      txFee = txFeeBCH + " BCH";
     } else if(currencyRadioBtn[2].checked) {
       coinVal = ethValBuy;
       coinType = " Ethereum";
-      txFee = "0.01 ETH";
+      txFee = txFeeETH + " ETH";
     } else if(currencyRadioBtn[3].checked) {
       coinVal = ltcValBuy;
       coinType = " Litecoin";
-      txFee = "N/A";
+      txFee = txFeeLTC + " LTC";
     }
   } else if(buysellRadioBtn[1].checked) {
     if(currencyRadioBtn[0].checked) {
@@ -244,15 +170,18 @@ function calculateCoins() {
     }
   }
 
+  // display calculated amount for dollar amount
   calculatedAmount.innerHTML = "<b>Number of coins:</b> " + amountVal/coinVal
     + coinType + " @ $" + coinVal + "/" + coinType
     + "<br><b>TX Fee:</b> " + txFee;
 
+  // display calculated amount for bitcoin amount
   calculatedAmountBox2.innerHTML = "<b>Cost of coins:</b> " + "$" + parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2)
     + " for " + bitcoinAmountVal + " " + coinType
     + "<br><b>TX Fee:</b> " + txFee;
 }
 
+// modify html display based on radio button clicks
 function calculationDollarType() {
   dollarInput.classList.remove('hide');
   cryptoInput.classList.add('hide');
@@ -261,6 +190,7 @@ function calculationDollarType() {
   calculatedAmountBox2.classList.add('hide');
 }
 
+// modify html display based on radio button clicks
 function calculationCryptoType() {
   dollarInput.classList.add('hide');
   cryptoInput.classList.remove('hide');
