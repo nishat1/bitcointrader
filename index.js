@@ -1,4 +1,5 @@
 const wss = new WebSocket('wss://api.bitfinex.com/ws/');
+const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC&tsyms=CAD";
 
 var conv_btc;
 var conv_bch;
@@ -34,6 +35,7 @@ dbConvRateObj.on('value', snap => {
   conv_eth = snap.val().eth;
 });
 
+
 dbMarginObj.on('value', snap => {
   buy_margin = snap.val().buy;
   sell_margin = snap.val().sell;
@@ -45,13 +47,28 @@ var bch;
 var eth;
 var ltc;
 
-wss.onopen = () => {
-  // API keys setup here (See "Authenticated Channels")
-  wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}));
-  wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}));
-  wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}));
-  wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}));
+// wss.onopen = () => {
+//   // API keys setup here (See "Authenticated Channels")
+//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BTCUSD"}));
+//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"BCHUSD"}));
+//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"ETHUSD"}));
+//   wss.send(JSON.stringify({"event":"subscribe","channel":"ticker","pair":"LTCUSD"}));
+// }
+
+var xhttp;
+
+if (window.XMLHttpRequest) {
+  // code for modern browsers
+  xhttp = new XMLHttpRequest();
+} else {
+  // code for old IE browsers
+  xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 }
+
+var btc_price;
+var bch_price;
+var eth_price;
+var ltc_price;
 
 var btcValBuy;
 var bchValBuy;
@@ -63,77 +80,128 @@ var bchValSell;
 var ethValSell;
 var ltcValSell;
 
-wss.onmessage = (msg) => {
-  // console.log(msg.data)
+// run intially
+// if(buy_margin != null) {
 
-   var response = JSON.parse(msg.data);
+// }
 
-   // get channel id for each response
-   if(response.pair == "BTCUSD" ) {
-     btc = response.chanId;
-   }
-   if(response.pair == "BCHUSD" ) {
-     bch = response.chanId;
-   }
-   if(response.pair == "ETHUSD" ) {
-     eth = response.chanId;
-   }
-   if(response.pair == "LTCUSD" ) {
-     ltc = response.chanId;
-   }
+// request again every 10 seconds
+setTimeout(requestHttp,1000);
+setInterval(requestHttp,10000);
+function requestHttp() {
 
-   var chanid = response[0];
+  xhttp.open("GET", url, true);
 
-   if(chanid == btc) {
-     var hb = response[1];
-     if(hb != "hb") {
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      console.log(JSON.parse(this.responseText));
+      btc_price = JSON.parse(this.responseText).BTC.CAD;
+      bch_price = JSON.parse(this.responseText).BCH.CAD;
+      eth_price = JSON.parse(this.responseText).ETH.CAD;
+      ltc_price = JSON.parse(this.responseText).LTC.CAD;
 
-       btcValBuy = parseFloat(Math.round(response[3]*conv_btc*buy_margin * 100) / 100).toFixed(2);
-       btcValSell = parseFloat(Math.round(response[1]*conv_btc*sell_margin * 100) / 100).toFixed(2);
+      btcValBuy = parseFloat(Math.round(btc_price*buy_margin*100)/100).toFixed(2);
+      btcValSell = parseFloat(Math.round(btc_price*sell_margin*100)/100).toFixed(2);
 
-       document.getElementById('BTCBUY').innerHTML = btcValBuy;
-       document.getElementById('BTCSELL').innerHTML = btcValSell;
-     }
-   }
+      bchValBuy = parseFloat(Math.round(bch_price*buy_margin*100)/100).toFixed(2);
+      bchValSell = parseFloat(Math.round(bch_price*sell_margin*100)/100).toFixed(2);
 
-   if(chanid == bch) {
-     var hb = response[1];
-     if(hb != "hb") {
+      ethValBuy = parseFloat(Math.round(eth_price*buy_margin*100)/100).toFixed(2);
+      ethValSell = parseFloat(Math.round(eth_price*sell_margin*100)/100).toFixed(2);
 
-       bchValBuy = parseFloat(Math.round(response[3]*conv_bch*buy_margin * 100) / 100).toFixed(2);
-       bchValSell = parseFloat(Math.round(response[1]*conv_bch*sell_margin * 100) / 100).toFixed(2);
+      ltcValBuy = parseFloat(Math.round(ltc_price*buy_margin*100)/100).toFixed(2);
+      ltcValSell = parseFloat(Math.round(ltc_price*sell_margin*100)/100).toFixed(2);
 
-       document.getElementById('BCHBUY').innerHTML = bchValBuy;
-       document.getElementById('BCHSELL').innerHTML = bchValSell;
-     }
-   }
+      document.getElementById('BTCBUY').innerHTML = btcValBuy;
+      document.getElementById('BTCSELL').innerHTML = btcValSell;
 
-   if(chanid == eth) {
-     var hb = response[1];
-     if(hb != "hb") {
+      document.getElementById('BCHBUY').innerHTML = bchValBuy;
+      document.getElementById('BCHSELL').innerHTML = bchValSell;
 
-       ethValBuy = parseFloat(Math.round(response[3]*conv_eth*buy_margin * 100) / 100).toFixed(2);
-       ethValSell = parseFloat(Math.round(response[1]*conv_eth*sell_margin * 100) / 100).toFixed(2);
+      document.getElementById('ETHBUY').innerHTML = ethValBuy;
+      document.getElementById('ETHSELL').innerHTML = ethValSell;
 
-       document.getElementById('ETHBUY').innerHTML = ethValBuy;
-       document.getElementById('ETHSELL').innerHTML = ethValSell;
-     }
-   }
+      document.getElementById('LTCBUY').innerHTML = ltcValBuy;
+      document.getElementById('LTCSELL').innerHTML = ltcValSell;
+    }
+  }
 
-   if(chanid == ltc) {
-     var hb = response[1];
-     if(hb != "hb") {
-
-       ltcValBuy = parseFloat(Math.round(response[3]*conv_ltc*buy_margin * 100) / 100).toFixed(2);
-       ltcValSell = parseFloat(Math.round(response[1]*conv_ltc*sell_margin * 100) / 100).toFixed(2);
-
-       document.getElementById('LTCBUY').innerHTML = ltcValBuy;
-       document.getElementById('LTCSELL').innerHTML = ltcValSell;
-     }
-   }
-
-
+  xhttp.send();
 }
+
+
+
+// wss.onmessage = (msg) => {
+//   // console.log(msg.data)
+//
+//    var response = JSON.parse(msg.data);
+//
+//    // get channel id for each response
+//    if(response.pair == "BTCUSD" ) {
+//      btc = response.chanId;
+//    }
+//    if(response.pair == "BCHUSD" ) {
+//      bch = response.chanId;
+//    }
+//    if(response.pair == "ETHUSD" ) {
+//      eth = response.chanId;
+//    }
+//    if(response.pair == "LTCUSD" ) {
+//      ltc = response.chanId;
+//    }
+//
+//    var chanid = response[0];
+//
+//    if(chanid == btc) {
+//      var hb = response[1];
+//      if(hb != "hb") {
+//
+//        // btcValBuy = parseFloat(Math.round(response[3]*conv_btc*buy_margin * 100) / 100).toFixed(2);
+//        btcValSell = parseFloat(Math.round(response[1]*conv_btc*sell_margin * 100) / 100).toFixed(2);
+//
+//        // document.getElementById('BTCBUY').innerHTML = btcValBuy;
+//        document.getElementById('BTCSELL').innerHTML = btcValSell;
+//      }
+//    }
+//
+//    if(chanid == bch) {
+//      var hb = response[1];
+//      if(hb != "hb") {
+//
+//        bchValBuy = parseFloat(Math.round(response[3]*conv_bch*buy_margin * 100) / 100).toFixed(2);
+//        bchValSell = parseFloat(Math.round(response[1]*conv_bch*sell_margin * 100) / 100).toFixed(2);
+//
+//        document.getElementById('BCHBUY').innerHTML = bchValBuy;
+//        document.getElementById('BCHSELL').innerHTML = bchValSell;
+//      }
+//    }
+//
+//    if(chanid == eth) {
+//      var hb = response[1];
+//      if(hb != "hb") {
+//
+//        ethValBuy = parseFloat(Math.round(response[3]*conv_eth*buy_margin * 100) / 100).toFixed(2);
+//        ethValSell = parseFloat(Math.round(response[1]*conv_eth*sell_margin * 100) / 100).toFixed(2);
+//
+//        document.getElementById('ETHBUY').innerHTML = ethValBuy;
+//        document.getElementById('ETHSELL').innerHTML = ethValSell;
+//      }
+//    }
+//
+//    if(chanid == ltc) {
+//      var hb = response[1];
+//      if(hb != "hb") {
+//
+//        ltcValBuy = parseFloat(Math.round(response[3]*conv_ltc*buy_margin * 100) / 100).toFixed(2);
+//        ltcValSell = parseFloat(Math.round(response[1]*conv_ltc*sell_margin * 100) / 100).toFixed(2);
+//
+//        document.getElementById('LTCBUY').innerHTML = ltcValBuy;
+//        document.getElementById('LTCSELL').innerHTML = ltcValSell;
+//      }
+//    }
+//
+//
+// }
 
 function calculateCoins() {
   var amountVal = buySellAmount.value;
