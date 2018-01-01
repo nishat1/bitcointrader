@@ -1,5 +1,4 @@
-const wss = new WebSocket('wss://api.bitfinex.com/ws/');
-const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC&tsyms=CAD";
+const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC,XRP&tsyms=CAD";
 
 const currencyRadioBtn = document.getElementsByName('currency');
 const buysellRadioBtn = document.getElementsByName('buysell');
@@ -23,6 +22,7 @@ var txFeeBTC;
 var txFeeBCH;
 var txFeeETH;
 var txFeeLTC;
+var txFeeXRP;
 
 // get buy and sell margin from firebase database
 dbMarginObj.on('value', snap => {
@@ -37,6 +37,7 @@ dbTXFee.on('value', snap => {
   txFeeBCH = snap.val().bch;
   txFeeETH = snap.val().eth;
   txFeeLTC = snap.val().ltc;
+  txFeeXRP = snap.val().xrp;
 });
 
 // create a new XMLHttpRequest object based on browser
@@ -54,18 +55,21 @@ var btc_price;
 var bch_price;
 var eth_price;
 var ltc_price;
+var xrp_price;
 
 // prices with buy margin
 var btcValBuy;
 var bchValBuy;
 var ethValBuy;
 var ltcValBuy;
+var xrpValBUy;
 
 // prices with sell margin
 var btcValSell;
 var bchValSell;
 var ethValSell;
 var ltcValSell;
+var xrpValSell;
 
 // run intially
 setTimeout(requestHttp,1000);
@@ -86,6 +90,7 @@ function requestHttp() {
       bch_price = JSON.parse(this.responseText).BCH.CAD; // bitcoin cash
       eth_price = JSON.parse(this.responseText).ETH.CAD; // ethereum
       ltc_price = JSON.parse(this.responseText).LTC.CAD; // litecoin
+      xrp_price = JSON.parse(this.responseText).XRP.CAD; // Ripple
 
       // add margin rates
       // bitcoin
@@ -104,6 +109,10 @@ function requestHttp() {
       ltcValBuy = parseFloat(Math.round(ltc_price*buy_margin*100)/100).toFixed(2);
       ltcValSell = parseFloat(Math.round(ltc_price*sell_margin*100)/100).toFixed(2);
 
+      // ripple
+      xrpValBuy = parseFloat(Math.round(xrp_price*buy_margin*100)/100).toFixed(2);
+      xrpValSell = parseFloat(Math.round(xrp_price*sell_margin*100)/100).toFixed(2);
+
       // update html table
       document.getElementById('BTCBUY').innerHTML = btcValBuy;
       document.getElementById('BTCSELL').innerHTML = btcValSell;
@@ -116,6 +125,9 @@ function requestHttp() {
 
       document.getElementById('LTCBUY').innerHTML = ltcValBuy;
       document.getElementById('LTCSELL').innerHTML = ltcValSell;
+
+      document.getElementById('XRPBUY').innerHTML = xrpValBuy;
+      document.getElementById('XRPSELL').innerHTML = xrpValSell;
     }
   }
 
@@ -153,6 +165,10 @@ function calculateCoins() {
       coinVal = ltcValBuy;
       coinType = " Litecoin";
       txFee = txFeeLTC + " LTC";
+    } else if(currencyRadioBtn[4].checked) {
+      coinVal = xrpValBuy;
+      coinType = " Ripple";
+      txFee = txFeeXRP + " XRP";
     }
   } else if(buysellRadioBtn[1].checked) {
     if(currencyRadioBtn[0].checked) {
