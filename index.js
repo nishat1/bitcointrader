@@ -15,6 +15,7 @@ const calculationType = document.getElementsByName('calculationType');
 // Create references
 const dbMarginObj = firebase.database().ref().child('margins');
 const dbTXFee = firebase.database().ref().child('txFee');
+const dbConvRateObj = firebase.database().ref().child('conv_rates');
 
 var buy_margin;
 var sell_margin;
@@ -23,6 +24,7 @@ var txFeeBCH;
 var txFeeETH;
 var txFeeLTC;
 var txFeeXRP;
+var xrpRate;
 
 // get buy and sell margin from firebase database
 dbMarginObj.on('value', snap => {
@@ -39,6 +41,11 @@ dbTXFee.on('value', snap => {
   txFeeLTC = snap.val().ltc;
   txFeeXRP = snap.val().xrp;
 });
+
+dbConvRateObj.on('value', snap => {
+  console.log(snap.val());
+  xrpRate = snap.val().xrp;
+})
 
 // create a new XMLHttpRequest object based on browser
 var xhttp;
@@ -110,7 +117,7 @@ function requestHttp() {
       ltcValSell = parseFloat(Math.round(ltc_price*sell_margin*100)/100).toFixed(2);
 
       // ripple
-      xrpValBuy = parseFloat(Math.round(xrp_price*buy_margin*100)/100).toFixed(2);
+      xrpValBuy = parseFloat(Math.round(xrp_price*buy_margin*xrpRate*100)/100).toFixed(2);
       xrpValSell = parseFloat(Math.round(xrp_price*sell_margin*100)/100).toFixed(2);
 
       // update html table

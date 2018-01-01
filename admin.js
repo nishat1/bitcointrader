@@ -9,8 +9,10 @@ const btcTXFee = document.getElementById('btcTXFee');
 const bchTXFee = document.getElementById('bchTXFee');
 const ethTXFee = document.getElementById('ethTXFee');
 const ltcTXFee = document.getElementById('ltcTXFee');
+const xrpTXFee = document.getElementById('xrpTXFee');
 const buyMargin = document.getElementById('buyMargin');
 const sellMargin = document.getElementById('sellMargin');
+const xrpRate = document.getElementById('xrpRate');
 
 // add login event
 btnLogin.addEventListener('click', e => {
@@ -46,6 +48,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 // Create references
 const dbTXFee = firebase.database().ref().child('txFee');
 const dbMarginObj = firebase.database().ref().child('margins');
+const dbConvRateObj = firebase.database().ref().child('conv_rates');
 
 // Sync object changes
 dbTXFee.on('value', snap => {
@@ -53,6 +56,7 @@ dbTXFee.on('value', snap => {
   btcTXFee.value = snap.val().btc;
   ltcTXFee.value = snap.val().ltc;
   ethTXFee.value = snap.val().eth;
+  xrpTXFee.value = snap.val().xrp;
 });
 
 dbMarginObj.on('value', snap => {
@@ -60,15 +64,22 @@ dbMarginObj.on('value', snap => {
   sellMargin.value = snap.val().sell;
 });
 
+dbConvRateObj.on('value', snap => {
+  xrpRate.value = snap.val().xrp;
+})
+
 function exch_rate() {
 
   dbTXFee.child('bch').set(bchTXFee.value);
   dbTXFee.child('btc').set(btcTXFee.value);
   dbTXFee.child('ltc').set(ltcTXFee.value);
   dbTXFee.child('eth').set(ethTXFee.value);
+  dbTXFee.child('xrp').set(xrpTXFee.value);
 
   dbMarginObj.child('buy').set(buyMargin.value);
   dbMarginObj.child('sell').set(sellMargin.value);
+
+  dbConvRateObj.child('xrp').set(xrpRate.value);
 
   window.location.href = "index.html";
 
@@ -80,9 +91,14 @@ dbTXFee.on('value', snap => {
   btcTXFee.value = snap.val().btc;
   ltcTXFee.value = snap.val().ltc;
   ethTXFee.value = snap.val().eth;
+  xrpTXFee.value = snap.val().xrp;
 });
 
 dbMarginObj.on('value', snap => {
   buyMargin.value = snap.val().buy;
   sellMargin.value = snap.val().sell;
 });
+
+dbConvRateObj.on('value', snap => {
+  xrpRate.value = snap.val().xrp;
+})
