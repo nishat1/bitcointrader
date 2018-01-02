@@ -46,9 +46,9 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 });
 
 // Create references
-const dbTXFee = firebase.database().ref().child('txFee');
-const dbMarginObj = firebase.database().ref().child('margins');
-const dbConvRateObj = firebase.database().ref().child('conv_rates');
+const dbTXFee = firebase.database().ref().child('coin_data').child('txFee');
+const dbMarginObj = firebase.database().ref().child('coin_data').child('margins');
+const dbConvRateObj = firebase.database().ref().child('coin_data').child('conv_rates');
 
 // Sync object changes
 dbTXFee.on('value', snap => {

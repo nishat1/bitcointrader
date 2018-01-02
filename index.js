@@ -13,9 +13,9 @@ const calculatedAmountBox2 = document.getElementById('calculatedAmountBox2');
 const calculationType = document.getElementsByName('calculationType');
 
 // Create references
-const dbMarginObj = firebase.database().ref().child('margins');
-const dbTXFee = firebase.database().ref().child('txFee');
-const dbConvRateObj = firebase.database().ref().child('conv_rates');
+const dbMarginObj = firebase.database().ref().child('coin_data').child('margins');
+const dbTXFee = firebase.database().ref().child('coin_data').child('txFee');
+const dbConvRateObj = firebase.database().ref().child('coin_data').child('conv_rates');
 
 var buy_margin;
 var sell_margin;
