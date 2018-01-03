@@ -1,4 +1,4 @@
-const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC,XRP&tsyms=CAD";
+const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC,XRP,BTG&tsyms=CAD";
 
 const currencyRadioBtn = document.getElementsByName('currency');
 const buysellRadioBtn = document.getElementsByName('buysell');
@@ -24,6 +24,7 @@ var txFeeBCH;
 var txFeeETH;
 var txFeeLTC;
 var txFeeXRP;
+var txFeeBTG;
 var xrpRate;
 
 // get buy and sell margin from firebase database
@@ -40,6 +41,7 @@ dbTXFee.on('value', snap => {
   txFeeETH = snap.val().eth;
   txFeeLTC = snap.val().ltc;
   txFeeXRP = snap.val().xrp;
+  txFeeBTG = snap.val().btg;
 });
 
 dbConvRateObj.on('value', snap => {
@@ -63,13 +65,15 @@ var bch_price;
 var eth_price;
 var ltc_price;
 var xrp_price;
+var btg_price;
 
 // prices with buy margin
 var btcValBuy;
 var bchValBuy;
 var ethValBuy;
 var ltcValBuy;
-var xrpValBUy;
+var xrpValBuy;
+var btgValBuy;
 
 // prices with sell margin
 var btcValSell;
@@ -77,6 +81,7 @@ var bchValSell;
 var ethValSell;
 var ltcValSell;
 var xrpValSell;
+var btgValSell;
 
 // run intially
 setTimeout(requestHttp,1000);
@@ -98,6 +103,7 @@ function requestHttp() {
       eth_price = JSON.parse(this.responseText).ETH.CAD; // ethereum
       ltc_price = JSON.parse(this.responseText).LTC.CAD; // litecoin
       xrp_price = JSON.parse(this.responseText).XRP.CAD; // Ripple
+      btg_price = JSON.parse(this.responseText).BTG.CAD; // bitcoin gold
 
       // add margin rates
       // bitcoin
@@ -120,6 +126,10 @@ function requestHttp() {
       xrpValBuy = parseFloat(Math.round(xrp_price*buy_margin*xrpRate*100)/100).toFixed(2);
       xrpValSell = parseFloat(Math.round(xrp_price*sell_margin*100)/100).toFixed(2);
 
+      // bitcoin gold
+      btgValBuy = parseFloat(Math.round(btg_price*buy_margin*100)/100).toFixed(2);
+      btgValSell = parseFloat(Math.round(btg_price*sell_margin*100)/100).toFixed(2);
+
       // update html table
       document.getElementById('BTCBUY').innerHTML = btcValBuy;
       document.getElementById('BTCSELL').innerHTML = btcValSell;
@@ -135,6 +145,9 @@ function requestHttp() {
 
       document.getElementById('XRPBUY').innerHTML = xrpValBuy;
       document.getElementById('XRPSELL').innerHTML = xrpValSell;
+
+      document.getElementById('BTGBUY').innerHTML = btgValBuy;
+      document.getElementById('BTGSELL').innerHTML = btgValSell;
     }
   }
 
@@ -165,14 +178,18 @@ function calculateCoins() {
       coinType = " Bitcoin Cash";
       txFee = txFeeBCH + " BCH";
     } else if(currencyRadioBtn[2].checked) {
+      coinVal = btgValBuy;
+      coinType = " Bitcoin Gold";
+      txFee = txFeeBTG + " BTG";
+    } else if(currencyRadioBtn[3].checked) {
       coinVal = ethValBuy;
       coinType = " Ethereum";
       txFee = txFeeETH + " ETH";
-    } else if(currencyRadioBtn[3].checked) {
+    } else if(currencyRadioBtn[4].checked) {
       coinVal = ltcValBuy;
       coinType = " Litecoin";
       txFee = txFeeLTC + " LTC";
-    } else if(currencyRadioBtn[4].checked) {
+    } else if(currencyRadioBtn[5].checked) {
       coinVal = xrpValBuy;
       coinType = " Ripple";
       txFee = txFeeXRP + " XRP";
@@ -185,11 +202,17 @@ function calculateCoins() {
       coinVal = bchValSell;
       coinType = " Bitcoin Cash";
     } else if(currencyRadioBtn[2].checked) {
+      coinVal = btgValSell;
+      coinType = " Bitcoin Gold";
+    } else if(currencyRadioBtn[3].checked) {
       coinVal = ethValSell;
       coinType = " Ethereum";
-    } else if(currencyRadioBtn[3].checked) {
+    } else if(currencyRadioBtn[4].checked) {
       coinVal = ltcValSell;
       coinType = " Litecoin";
+    } else if(currencyRadioBtn[5].checked) {
+      coinVal = xrpValSell;
+      coinType = " Ripple";
     }
   }
 

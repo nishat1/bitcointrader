@@ -10,6 +10,7 @@ const bchTXFee = document.getElementById('bchTXFee');
 const ethTXFee = document.getElementById('ethTXFee');
 const ltcTXFee = document.getElementById('ltcTXFee');
 const xrpTXFee = document.getElementById('xrpTXFee');
+const btgTXFee = document.getElementById('btgTXFee');
 const buyMargin = document.getElementById('buyMargin');
 const sellMargin = document.getElementById('sellMargin');
 const xrpRate = document.getElementById('xrpRate');
@@ -57,6 +58,7 @@ dbTXFee.on('value', snap => {
   ltcTXFee.value = snap.val().ltc;
   ethTXFee.value = snap.val().eth;
   xrpTXFee.value = snap.val().xrp;
+  btgTXFee.value = snap.val().btg;
 });
 
 dbMarginObj.on('value', snap => {
@@ -75,6 +77,7 @@ function exch_rate() {
   dbTXFee.child('ltc').set(ltcTXFee.value);
   dbTXFee.child('eth').set(ethTXFee.value);
   dbTXFee.child('xrp').set(xrpTXFee.value);
+  dbTXFee.child('btg').set(btgTXFee.value);
 
   dbMarginObj.child('buy').set(buyMargin.value);
   dbMarginObj.child('sell').set(sellMargin.value);
@@ -92,6 +95,7 @@ dbTXFee.on('value', snap => {
   ltcTXFee.value = snap.val().ltc;
   ethTXFee.value = snap.val().eth;
   xrpTXFee.value = snap.val().xrp;
+  btgTXFee.value = snap.val().btg;
 });
 
 dbMarginObj.on('value', snap => {
