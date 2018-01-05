@@ -8,9 +8,24 @@ const bitcoinAmount = document.getElementById('bitcoinAmount');
 const dollarInput = document.getElementById('dollarInput');
 const cryptoInput = document.getElementById('cryptoInput');
 const calculateBtn = document.getElementById('calculateBtn');
-const calculatedAmount = document.getElementById('calculatedAmount');
-const calculatedAmountBox2 = document.getElementById('calculatedAmountBox2');
+// const calculatedAmount = document.getElementById('calculatedAmount');
+// const calculatedAmountBox2 = document.getElementById('calculatedAmountBox2');
 const calculationType = document.getElementsByName('calculationType');
+
+const tableDollarAmount = document.getElementById('tableDollarAmount');
+const numberOfCoins = document.getElementById('numberOfCoins');
+const box1Rate = document.getElementById('box1Rate');
+const box1Rate2 = document.getElementById('box1Rate2');
+const box1TXFee = document.getElementById('box1TXFee');
+const totalCostBox1 = document.getElementById('totalCostBox1');
+
+const tableCryptoAmount = document.getElementById('tableCryptoAmount');
+const costOfCoins = document.getElementById('costOfCoins');
+const box2Rate = document.getElementById('box2Rate');
+const box2Rate2 = document.getElementById('box2Rate2');
+const box2TXFee = document.getElementById('box2TXFee');
+const totalCostBox2 = document.getElementById('totalCostBox2');
+
 
 // Create references
 const dbMarginObj = firebase.database().ref().child('coin_data').child('margins');
@@ -172,59 +187,88 @@ function calculateCoins() {
     if(currencyRadioBtn[0].checked) {
       coinVal = btcValBuy;
       coinType = " Bitcoin";
-      txFee = txFeeBTC + " BTC";
+      txFee = parseFloat(Math.round(txFeeBTC*1000000)/1000000).toFixed(6);
     } else if(currencyRadioBtn[1].checked) {
       coinVal = bchValBuy;
       coinType = " Bitcoin Cash";
-      txFee = txFeeBCH + " BCH";
+      txFee = parseFloat(Math.round(txFeeBCH*1000000)/1000000).toFixed(6);
     } else if(currencyRadioBtn[2].checked) {
       coinVal = btgValBuy;
       coinType = " Bitcoin Gold";
-      txFee = txFeeBTG + " BTG";
+      txFee = parseFloat(Math.round(txFeeBTG*1000000)/1000000).toFixed(6);
     } else if(currencyRadioBtn[3].checked) {
       coinVal = ethValBuy;
       coinType = " Ethereum";
-      txFee = txFeeETH + " ETH";
+      txFee = parseFloat(Math.round(txFeeETH*1000000)/1000000).toFixed(6);
     } else if(currencyRadioBtn[4].checked) {
       coinVal = ltcValBuy;
       coinType = " Litecoin";
-      txFee = txFeeLTC + " LTC";
+      txFee = parseFloat(Math.round(txFeeLTC*1000000)/1000000).toFixed(6);
     } else if(currencyRadioBtn[5].checked) {
       coinVal = xrpValBuy;
       coinType = " Ripple";
-      txFee = txFeeXRP + " XRP";
+      txFee = parseFloat(Math.round(txFeeXRP*1000000)/1000000).toFixed(6);
     }
   } else if(buysellRadioBtn[1].checked) {
     if(currencyRadioBtn[0].checked) {
       coinVal = btcValSell;
       coinType = " Bitcoin";
+      txFee = "N/A";
     } else if(currencyRadioBtn[1].checked) {
       coinVal = bchValSell;
       coinType = " Bitcoin Cash";
+      txFee = "N/A";
     } else if(currencyRadioBtn[2].checked) {
       coinVal = btgValSell;
       coinType = " Bitcoin Gold";
+      txFee = "N/A";
     } else if(currencyRadioBtn[3].checked) {
       coinVal = ethValSell;
       coinType = " Ethereum";
+      txFee = "N/A";
     } else if(currencyRadioBtn[4].checked) {
       coinVal = ltcValSell;
       coinType = " Litecoin";
+      txFee = "N/A";
     } else if(currencyRadioBtn[5].checked) {
       coinVal = xrpValSell;
       coinType = " Ripple";
+      txFee = "N/A";
     }
   }
 
   // display calculated amount for dollar amount
-  calculatedAmount.innerHTML = "<b>Number of coins:</b> " + amountVal/coinVal
-    + coinType + " @ $" + coinVal + "/" + coinType
-    + "<br><b>TX Fee:</b> " + txFee;
+  // calculatedAmount.innerHTML = "<b>Number of coins:</b> " + parseFloat(Math.round(amountVal/coinVal*1000000)/1000000).toFixed(6)
+  //   + coinType + " @ $" + coinVal + "/" + coinType
+  //   + "<br><b>TX Fee:</b> " + txFee;
+
+  numberOfCoins.innerHTML = parseFloat(Math.round(amountVal/coinVal*1000000)/1000000).toFixed(6) + coinType;
+  box1Rate.innerHTML = "<b>@</b> &emsp; $" + coinVal + " /" + coinType;
+  box1Rate2.innerHTML = "<b>@</b> &emsp; $" + coinVal + " /" + coinType;
+  if(buysellRadioBtn[0].checked) {
+    box1TXFee.innerHTML = txFee + coinType;
+    totalCostBox1.innerHTML = parseFloat(Math.round((parseFloat(Math.round(amountVal/coinVal*1000000)/1000000).toFixed(6) - txFee)*1000000)/1000000).toFixed(6) + coinType;
+  } else if(buysellRadioBtn[1].checked) {
+    box1TXFee.innerHTML = txFee;
+    totalCostBox1.innerHTML = parseFloat(Math.round(amountVal/coinVal*1000000)/1000000).toFixed(6) + coinType;
+  }
 
   // display calculated amount for bitcoin amount
-  calculatedAmountBox2.innerHTML = "<b>Cost of coins:</b> " + "$" + parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2)
-    + " for " + bitcoinAmountVal + " " + coinType
-    + "<br><b>TX Fee:</b> " + txFee;
+  // calculatedAmountBox2.innerHTML = "<b>Cost of coins:</b> " + "$" + parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2)
+  //   + " for " + bitcoinAmountVal + " " + coinType
+  //   + "<br><b>TX Fee:</b> " + txFee;
+
+  costOfCoins.innerHTML = "$" + parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2);
+  box2Rate.innerHTML = "<b>for</b> &emsp; " + bitcoinAmountVal + " " + coinType;
+  box2Rate2.innerHTML = "<b>for</b> &emsp; " + bitcoinAmountVal + " " + coinType;
+  if(buysellRadioBtn[0].checked) {
+    box2TXFee.innerHTML = "$" + parseFloat(Math.round(txFee*coinVal*100)/100).toFixed(2);
+    totalCostBox2.innerHTML = "$" + parseFloat(Math.round((parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2) -
+                                    parseFloat(Math.round(txFee*coinVal*100)/100).toFixed(2)*-1)*100)/100).toFixed(2);
+  } else if(buysellRadioBtn[1].checked) {
+    box2TXFee.innerHTML = txFee;
+    totalCostBox2.innerHTML = "$" + parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2);
+  }
 }
 
 // modify html display based on radio button clicks
@@ -232,8 +276,10 @@ function calculationDollarType() {
   dollarInput.classList.remove('hide');
   cryptoInput.classList.add('hide');
   calculateBtn.classList.remove('hide');
-  calculatedAmount.classList.remove('hide');
-  calculatedAmountBox2.classList.add('hide');
+  // calculatedAmount.classList.remove('hide');
+  // calculatedAmountBox2.classList.add('hide');
+  tableDollarAmount.classList.remove('hide');
+  tableCryptoAmount.classList.add('hide');
 }
 
 // modify html display based on radio button clicks
@@ -241,6 +287,8 @@ function calculationCryptoType() {
   dollarInput.classList.add('hide');
   cryptoInput.classList.remove('hide');
   calculateBtn.classList.remove('hide');
-  calculatedAmount.classList.add('hide');
-  calculatedAmountBox2.classList.remove('hide');
+  // calculatedAmount.classList.add('hide');
+  // calculatedAmountBox2.classList.remove('hide');
+  tableDollarAmount.classList.add('hide');
+  tableCryptoAmount.classList.remove('hide');
 }

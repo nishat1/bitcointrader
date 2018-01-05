@@ -149,8 +149,8 @@
 
                 <h5>Enter:</h5>
                 <div style="padding-left:10px">
-                  <label class="radio-inline"><input type="radio" name="calculationType" value="dollarAmount" checked="checked" onclick="calculationDollarType();"/>  Dollar Amount</label>
-                  <label class="radio-inline"><input type="radio" name="calculationType" value="cryptoAmount" onclick="calculationCryptoType();"/>  Cryptocurrency Amount</label>
+                  <label class="radio-inline"><input id="dollarRadioBtn" type="radio" name="calculationType" value="dollarAmount" checked="checked" onclick="calculationDollarType();"/>  Dollar Amount</label>
+                  <label class="radio-inline"><input id="cryptoRadioBtn" type="radio" name="calculationType" value="cryptoAmount" onclick="calculationCryptoType();"/>  Cryptocurrency Amount</label>
                 </div>
 
                 <h5></h5>
@@ -171,8 +171,54 @@
 
               </form>
 
-              <h5 id="calculatedAmount" style="padding-left:10px"></h5>
-              <h5 id="calculatedAmountBox2" style="padding-left:10px" class="hide"></h5>
+              <br>
+
+              <div class="row" id="tableDollarAmount">
+                <div class="col-sm-6">
+                  <table class="table">
+                    <tr>
+                      <td style="font-weight:bold">Number of Coins:</td>
+                      <td id="numberOfCoins" align="right"></td>
+                      <td id="box1Rate" align="left"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold">Transaction Fee:</td>
+                      <td id="box1TXFee" align="right"></td>
+                      <td align="right"> </td>
+                    </tr>
+                    <tr style="background-color:#E6E6E6;font-weight:bold">
+                      <td style="font-weight:bold">Total:</td>
+                      <td id="totalCostBox1" align="right"></td>
+                      <td id="box1Rate2" align="left"></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <div class="row hide" id="tableCryptoAmount">
+                <div class="col-sm-6">
+                  <table class="table">
+                    <tr>
+                      <td style="font-weight:bold">Cost of Coins:</td>
+                      <td id="costOfCoins" align="right"></td>
+                      <td id="box2Rate" align="left"></td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold">Transaction Fee:</td>
+                      <td id="box2TXFee" align="right"></td>
+                      <td align="right"> </td>
+                    </tr>
+                    <tr style="background-color:#E6E6E6;font-weight:bold">
+                      <td style="font-weight:bold">Total:</td>
+                      <td id="totalCostBox2" align="right"></td>
+                      <td id="box2Rate2" align="left"> </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+
+              <!-- <h5 id="calculatedAmount" style="padding-left:10px"></h5>
+              <h5 id="calculatedAmountBox2" style="padding-left:10px" class="hide"></h5> -->
 
             </div>
 
