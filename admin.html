@@ -100,67 +100,165 @@
       <!-- Conv Rate Form (after logged in) -->
       <div id="convRateForm" style="padding-left:10px">
 
-        <h3> Update Conversion Rates </h3>
+        <h3> Update Values </h3>
 
         <br>
 
         <div style="padding-left:10px">
 
-          <h5>Ripple Rate:</h5>
-          <input id="xrpRate" type="number" step="0.001">
+          <div class="container">
+            <div class="row">
+              <h4><a href="#buysellMarginForm" data-toggle="collapse">Update Buy and Sell Margins</a></h4>
+              <div id="buysellMarginForm" class="collapse">
+                <br>
+                <div style="padding-left:10px">
 
-          <br>
-          <br>
+                  <h5>Buy Margin:</h5>
+                  <input id="buyMargin" type="number" step="0.001">
 
-          <h5>Buy Margin:</h5>
-          <input id="buyMargin" type="number" step="0.001">
+                  <br>
+                  <br>
 
-          <br>
-          <br>
+                  <h5>Sell Margin:</h5>
+                  <input id="sellMargin" type="number" step="0.001">
 
-          <h5>Sell Margin:</h5>
-          <input id="sellMargin" type="number" step="0.001">
+                  <br>
+                  <br>
 
-          <br>
-          <br>
+                  <input type="button" value="Submit" class="btn btn-action" onclick="buysell_btn();"/>
 
-          <h5>BTC TX Fee:</h5>
-          <input id="btcTXFee" type="number" step="0.0001">
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <br>
-          <br>
+          <hr>
 
-          <h5>BCH TX Fee:</h5>
-          <input id="bchTXFee" type="number" step="0.0001">
+          <div class="container">
+            <div class="row">
+              <h4><a href="#convrate_form" data-toggle="collapse">Update Conversion Rates</a></h4>
+              <div id="convrate_form" class="collapse">
+                <br>
+                <div style="padding-left:10px">
 
-          <br>
-          <br>
+                  <h5>Bitcoin Rate:</h5>
+                  <input id="btcRate" type="number" step="0.001">
 
-          <h5>ETH TX Fee:</h5>
-          <input id="ethTXFee" type="number" step="0.0001">
+                  <br>
+                  <br>
 
-          <br>
-          <br>
+                  <h5>Bitcoin Cash Rate:</h5>
+                  <input id="bchRate" type="number" step="0.001">
 
-          <h5>LTC TX Fee:</h5>
-          <input id="ltcTXFee" type="number" step="0.0001">
+                  <br>
+                  <br>
 
-          <br>
-          <br>
+                  <h5>Bitcoin Gold Rate:</h5>
+                  <input id="btgRate" type="number" step="0.001">
 
-          <h5>XRP TX Fee:</h5>
-          <input id="xrpTXFee" type="number" step="0.0001">
+                  <br>
+                  <br>
 
-          <br>
-          <br>
+                  <h5>Dogecoin Rate:</h5>
+                  <input id="dogeRate" type="number" step="0.001">
 
-          <h5>BTG TX Fee:</h5>
-          <input id="btgTXFee" type="number" step="0.0001">
+                  <br>
+                  <br>
 
-          <br>
-          <br>
+                  <h5>Ethereum Rate:</h5>
+                  <input id="ethRate" type="number" step="0.001">
 
-          <input type="button" value="Submit" class="btn btn-action" onclick="exch_rate();"/>
+                  <br>
+                  <br>
+
+                  <h5>Kin Rate:</h5>
+                  <input id="kinRate" type="number" step="0.001">
+
+                  <br>
+                  <br>
+
+                  <h5>Litecoin Rate:</h5>
+                  <input id="ltcRate" type="number" step="0.001">
+
+                  <br>
+                  <br>
+
+                  <h5>Ripple Rate:</h5>
+                  <input id="xrpRate" type="number" step="0.001">
+
+                  <br>
+                  <br>
+
+                  <input type="button" value="Submit" class="btn btn-action" onclick="convRate_btn();"/>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="container">
+            <div class="row">
+              <h4><a href="#txfee_form" data-toggle="collapse">Update Transaction Fees</a></h4>
+              <div id="txfee_form" class="collapse">
+                <br>
+                <div style="padding-left:10px">
+
+                  <h5>BTC TX Fee:</h5>
+                  <input id="btcTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>BCH TX Fee:</h5>
+                  <input id="bchTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>BTG TX Fee:</h5>
+                  <input id="btgTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>DOGE TX Fee:</h5>
+                  <input id="dogeTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>ETH TX Fee:</h5>
+                  <input id="ethTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>KIN TX Fee:</h5>
+                  <input id="kinTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>LTC TX Fee:</h5>
+                  <input id="ltcTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <h5>XRP TX Fee:</h5>
+                  <input id="xrpTXFee" type="number" step="0.0001">
+
+                  <br>
+                  <br>
+
+                  <input type="button" value="Submit" class="btn btn-action" onclick="txFee_btn();"/>
+
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
 

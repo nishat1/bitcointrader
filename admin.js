@@ -3,17 +3,30 @@ const txtEmail = document.getElementById('txtEmail');
 const txtPassword = document.getElementById('txtPassword');
 const btnLogin = document.getElementById('btnLogin');
 const btnLogout = document.getElementById('btnLogout');
+
 const login_inputs = document.getElementById('login_inputs');
 const convRateForm = document.getElementById('convRateForm');
+
 const btcTXFee = document.getElementById('btcTXFee');
 const bchTXFee = document.getElementById('bchTXFee');
 const ethTXFee = document.getElementById('ethTXFee');
 const ltcTXFee = document.getElementById('ltcTXFee');
 const xrpTXFee = document.getElementById('xrpTXFee');
 const btgTXFee = document.getElementById('btgTXFee');
+const dogeTXFee = document.getElementById('dogeTXFee');
+const kinTXFee = document.getElementById('kinTXFee');
+
 const buyMargin = document.getElementById('buyMargin');
 const sellMargin = document.getElementById('sellMargin');
+
 const xrpRate = document.getElementById('xrpRate');
+const btcRate = document.getElementById('btcRate');
+const bchRate = document.getElementById('bchRate');
+const btgRate = document.getElementById('btgRate');
+const ethRate = document.getElementById('ethRate');
+const ltcRate = document.getElementById('ltcRate');
+const dogeRate = document.getElementById('dogeRate');
+const kinRate = document.getElementById('kinRate');
 
 // add login event
 btnLogin.addEventListener('click', e => {
@@ -59,6 +72,8 @@ dbTXFee.on('value', snap => {
   ethTXFee.value = snap.val().eth;
   xrpTXFee.value = snap.val().xrp;
   btgTXFee.value = snap.val().btg;
+  dogeTXFee.value = snap.val().doge;
+  kinTXFee.value = snap.val().kin;
 });
 
 dbMarginObj.on('value', snap => {
@@ -68,41 +83,56 @@ dbMarginObj.on('value', snap => {
 
 dbConvRateObj.on('value', snap => {
   xrpRate.value = snap.val().xrp;
+  btcRate.value = snap.val().btc;
+  bchRate.value = snap.val().bch;
+  btgRate.value = snap.val().btg;
+  ethRate.value = snap.val().eth;
+  ltcRate.value = snap.val().ltc;
+  dogeRate.value = snap.val().doge;
+  kinRate.value = snap.val().kin;
 })
 
-function exch_rate() {
+function buysell_btn() {
 
-  dbTXFee.child('bch').set(bchTXFee.value);
-  dbTXFee.child('btc').set(btcTXFee.value);
-  dbTXFee.child('ltc').set(ltcTXFee.value);
-  dbTXFee.child('eth').set(ethTXFee.value);
-  dbTXFee.child('xrp').set(xrpTXFee.value);
-  dbTXFee.child('btg').set(btgTXFee.value);
-
-  dbMarginObj.child('buy').set(buyMargin.value);
-  dbMarginObj.child('sell').set(sellMargin.value);
-
-  dbConvRateObj.child('xrp').set(xrpRate.value);
+  dbMarginObj.set({
+    buy : buyMargin.value,
+    sell : sellMargin.value
+  });
 
   window.location.href = "index.html";
 
 }
 
-// Sync object changes again
-dbTXFee.on('value', snap => {
-  bchTXFee.value = snap.val().bch;
-  btcTXFee.value = snap.val().btc;
-  ltcTXFee.value = snap.val().ltc;
-  ethTXFee.value = snap.val().eth;
-  xrpTXFee.value = snap.val().xrp;
-  btgTXFee.value = snap.val().btg;
-});
+function convRate_btn() {
 
-dbMarginObj.on('value', snap => {
-  buyMargin.value = snap.val().buy;
-  sellMargin.value = snap.val().sell;
-});
+  dbConvRateObj.set({
+    bch : bchRate.value,
+    btc : btcRate.value,
+    ltc : ltcRate.value,
+    xrp : xrpRate.value,
+    btg : btgRate.value,
+    eth : ethRate.value,
+    doge : dogeRate.value,
+    kin : kinRate.value
+  });
 
-dbConvRateObj.on('value', snap => {
-  xrpRate.value = snap.val().xrp;
-})
+  window.location.href = "index.html";
+
+}
+
+function txFee_btn() {
+
+  dbTXFee.set({
+    bch : bchTXFee.value,
+    btc : btcTXFee.value,
+    ltc : ltcTXFee.value,
+    eth : ethTXFee.value,
+    xrp : xrpTXFee.value,
+    btg : btgTXFee.value,
+    doge : dogeTXFee.value,
+    kin : kinTXFee.value
+  });
+
+  window.location.href = "index.html";
+
+}

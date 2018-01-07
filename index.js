@@ -1,4 +1,4 @@
-const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC,XRP,BTG&tsyms=CAD";
+const url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,BCH,ETH,LTC,XRP,BTG,DOGE,KIN&tsyms=CAD";
 
 const currencyRadioBtn = document.getElementsByName('currency');
 const buysellRadioBtn = document.getElementsByName('buysell');
@@ -34,34 +34,53 @@ const dbConvRateObj = firebase.database().ref().child('coin_data').child('conv_r
 
 var buy_margin;
 var sell_margin;
+
 var txFeeBTC;
 var txFeeBCH;
 var txFeeETH;
 var txFeeLTC;
 var txFeeXRP;
 var txFeeBTG;
+var txFeeDOGE;
+var txFeeKIN;
+
 var xrpRate;
+var btcRate;
+var bchRate;
+var ltcRate;
+var ethRate;
+var dogeRate;
+var btgRate;
+var kinRate;
 
 // get buy and sell margin from firebase database
 dbMarginObj.on('value', snap => {
-  console.log(snap.val());
   buy_margin = snap.val().buy;
   sell_margin = snap.val().sell;
 });
 
 dbTXFee.on('value', snap => {
-  console.log(snap.val());
   txFeeBTC = snap.val().btc;
   txFeeBCH = snap.val().bch;
   txFeeETH = snap.val().eth;
   txFeeLTC = snap.val().ltc;
   txFeeXRP = snap.val().xrp;
   txFeeBTG = snap.val().btg;
+  txFeeDOGE = snap.val().doge;
+  txFeeKIN = snap.val().kin;
 });
 
 dbConvRateObj.on('value', snap => {
-  console.log(snap.val());
+
   xrpRate = snap.val().xrp;
+  btcRate = snap.val().btc;
+  bchRate = snap.val().bch;
+  ethRate = snap.val().eth;
+  ltcRate = snap.val().ltc;
+  btgRate = snap.val().btg;
+  dogeRate = snap.val().doge;
+  kinRate = snap.val().kin;
+
 })
 
 // create a new XMLHttpRequest object based on browser
@@ -81,6 +100,8 @@ var eth_price;
 var ltc_price;
 var xrp_price;
 var btg_price;
+var doge_price;
+var kin_price;
 
 // prices with buy margin
 var btcValBuy;
@@ -89,6 +110,8 @@ var ethValBuy;
 var ltcValBuy;
 var xrpValBuy;
 var btgValBuy;
+var dogeValBuy;
+var kinValVuy;
 
 // prices with sell margin
 var btcValSell;
@@ -97,6 +120,8 @@ var ethValSell;
 var ltcValSell;
 var xrpValSell;
 var btgValSell;
+var dogeValSell;
+var kinValSell;
 
 // run intially
 setTimeout(requestHttp,1000);
@@ -119,22 +144,24 @@ function requestHttp() {
       ltc_price = JSON.parse(this.responseText).LTC.CAD; // litecoin
       xrp_price = JSON.parse(this.responseText).XRP.CAD; // Ripple
       btg_price = JSON.parse(this.responseText).BTG.CAD; // bitcoin gold
+      doge_price = JSON.parse(this.responseText).DOGE.CAD; // dogecoin
+      kin_price = JSON.parse(this.responseText).KIN.CAD; // kin
 
       // add margin rates
       // bitcoin
-      btcValBuy = parseFloat(Math.round(btc_price*buy_margin*100)/100).toFixed(2);
+      btcValBuy = parseFloat(Math.round(btc_price*buy_margin*btcRate*100)/100).toFixed(2);
       btcValSell = parseFloat(Math.round(btc_price*sell_margin*100)/100).toFixed(2);
 
       // bitcoin cash
-      bchValBuy = parseFloat(Math.round(bch_price*buy_margin*100)/100).toFixed(2);
+      bchValBuy = parseFloat(Math.round(bch_price*buy_margin*bchRate*100)/100).toFixed(2);
       bchValSell = parseFloat(Math.round(bch_price*sell_margin*100)/100).toFixed(2);
 
       // ethereum
-      ethValBuy = parseFloat(Math.round(eth_price*buy_margin*100)/100).toFixed(2);
+      ethValBuy = parseFloat(Math.round(eth_price*buy_margin*ethRate*100)/100).toFixed(2);
       ethValSell = parseFloat(Math.round(eth_price*sell_margin*100)/100).toFixed(2);
 
       // litecoin
-      ltcValBuy = parseFloat(Math.round(ltc_price*buy_margin*100)/100).toFixed(2);
+      ltcValBuy = parseFloat(Math.round(ltc_price*buy_margin*ltcRate*100)/100).toFixed(2);
       ltcValSell = parseFloat(Math.round(ltc_price*sell_margin*100)/100).toFixed(2);
 
       // ripple
@@ -142,8 +169,16 @@ function requestHttp() {
       xrpValSell = parseFloat(Math.round(xrp_price*sell_margin*100)/100).toFixed(2);
 
       // bitcoin gold
-      btgValBuy = parseFloat(Math.round(btg_price*buy_margin*100)/100).toFixed(2);
+      btgValBuy = parseFloat(Math.round(btg_price*buy_margin*btgRate*100)/100).toFixed(2);
       btgValSell = parseFloat(Math.round(btg_price*sell_margin*100)/100).toFixed(2);
+
+      // doge
+      dogeValBuy = parseFloat(Math.round(doge_price*buy_margin*dogeRate*10000)/10000).toFixed(4);
+      dogeValSell = parseFloat(Math.round(doge_price*sell_margin*10000)/10000).toFixed(4);
+
+      // kin
+      kinValBuy = parseFloat(Math.round(kin_price*buy_margin*kinRate*10000)/10000).toFixed(4);
+      kinValSell = parseFloat(Math.round(kin_price*sell_margin*10000)/10000).toFixed(4);
 
       // update html table
       document.getElementById('BTCBUY').innerHTML = btcValBuy;
@@ -163,6 +198,12 @@ function requestHttp() {
 
       document.getElementById('BTGBUY').innerHTML = btgValBuy;
       document.getElementById('BTGSELL').innerHTML = btgValSell;
+
+      document.getElementById('DOGEBUY').innerHTML = dogeValBuy;
+      document.getElementById('DOGESELL').innerHTML = dogeValSell;
+
+      document.getElementById('KINBUY').innerHTML = kinValBuy;
+      document.getElementById('KINSELL').innerHTML = kinValSell;
     }
   }
 
@@ -197,14 +238,22 @@ function calculateCoins() {
       coinType = " Bitcoin Gold";
       txFee = parseFloat(Math.round(txFeeBTG*1000000)/1000000).toFixed(6);
     } else if(currencyRadioBtn[3].checked) {
+      coinVal = dogeValBuy;
+      coinType = " Dogecoin";
+      txFee = parseFloat(Math.round(txFeeDOGE*1000000)/1000000).toFixed(6);
+    } else if(currencyRadioBtn[4].checked) {
       coinVal = ethValBuy;
       coinType = " Ethereum";
       txFee = parseFloat(Math.round(txFeeETH*1000000)/1000000).toFixed(6);
-    } else if(currencyRadioBtn[4].checked) {
+    } else if(currencyRadioBtn[5].checked) {
+      coinVal = kinValBuy;
+      coinType = " Kin";
+      txFee = parseFloat(Math.round(txFeeKIN*1000000)/1000000).toFixed(6);
+    } else if(currencyRadioBtn[6].checked) {
       coinVal = ltcValBuy;
       coinType = " Litecoin";
       txFee = parseFloat(Math.round(txFeeLTC*1000000)/1000000).toFixed(6);
-    } else if(currencyRadioBtn[5].checked) {
+    } else if(currencyRadioBtn[7].checked) {
       coinVal = xrpValBuy;
       coinType = " Ripple";
       txFee = parseFloat(Math.round(txFeeXRP*1000000)/1000000).toFixed(6);
@@ -223,14 +272,22 @@ function calculateCoins() {
       coinType = " Bitcoin Gold";
       txFee = "N/A";
     } else if(currencyRadioBtn[3].checked) {
+      coinVal = dogeValSell;
+      coinType = " Dogecoin";
+      txFee = "N/A";
+    } else if(currencyRadioBtn[4].checked) {
       coinVal = ethValSell;
       coinType = " Ethereum";
       txFee = "N/A";
-    } else if(currencyRadioBtn[4].checked) {
+    } else if(currencyRadioBtn[5].checked) {
+      coinVal = kinValSell;
+      coinType = " KIN";
+      txFee = "N/A";
+    } else if(currencyRadioBtn[6].checked) {
       coinVal = ltcValSell;
       coinType = " Litecoin";
       txFee = "N/A";
-    } else if(currencyRadioBtn[5].checked) {
+    } else if(currencyRadioBtn[7].checked) {
       coinVal = xrpValSell;
       coinType = " Ripple";
       txFee = "N/A";
