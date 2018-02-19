@@ -300,8 +300,8 @@ function calculateCoins() {
   //   + "<br><b>TX Fee:</b> " + txFee;
 
   costOfCoins.innerHTML = "$" + parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2);
-  box2Rate.innerHTML = "<b>for</b> &emsp; " + bitcoinAmountVal + " " + coinType;
-  box2Rate2.innerHTML = "<b>for</b> &emsp; " + bitcoinAmountVal + " " + coinType;
+  box2Rate.innerHTML = "<b>for</b> &emsp; " + bitcoinAmountVal + " " + coinType + "&emsp;<b>@</b> &emsp; $" + coinVal + " /" + coinType;
+  box2Rate2.innerHTML = "<b>for</b> &emsp; " + bitcoinAmountVal + " " + coinType + "&emsp;<b>@</b> &emsp; $" + coinVal + " /" + coinType;
   if(buysellRadioBtn[0].checked) {
     box2TXFee.innerHTML = "$" + parseFloat(Math.round(txFee*coinVal*100)/100).toFixed(2);
     totalCostBox2.innerHTML = "$" + parseFloat(Math.round((parseFloat(Math.round(bitcoinAmountVal*coinVal*100)/100).toFixed(2) -
